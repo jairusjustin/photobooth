@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Capture - Photobooth</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- Normal Header -->
+  <header class="normal-header">
+      <div class="logo">
+        <a href="index.html">
+          <img src="../assets/pb_logo.png" alt="photoboot" />
+        </a>    
+      </div>
+      <nav>
+          <ul>
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#privacy">Privacy Policy</a></li>
+          <li><a href="#contact">Contact</a></li>
+          </ul>
+      </nav>
+      <div class="github-icon">
+          <a href="https://github.com/your-username" target="_blank">
+          <img src="../assets/github-icon.png" alt="GitHub" />
+          </a>
+      </div>
+  </header>
+
+  <!-- Sticky Header -->
+  <header class="sticky-header" id="stickyHeader">
+      <div class="logo">
+        <a href="index.html">
+          <img src="../assets/pb_logo.png" alt="photoboot" />
+        </a>    
+      </div>
+      <nav>
+          <ul>
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#privacy">Privacy Policy</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="github-icon">
+          <a href="https://github.com/your-username" target="_blank">
+          <img src="../assets/github-icon.png" alt="GitHub" />
+          </a>
+      </div>
+  </header>
+
+<main id="home">
+  <div class="booth-container" style="text-align:center;">
+    <h2>Get ready for your photo!</h2>
+
+    <div class="video-wrapper">
+      <video id="video" autoplay playsinline class="capture-video"></video>
+      <div id="countdown" class="countdown"></div>
+    </div>
+
+    <button id="start" class="start-button" hidden>
+      Start <i class="fas fa-camera camera-icon"></i>
+    </button>
+
+    <div id="strip" class="photo-strip"></div>
+  </div>
+
+</main>
+  <script src="../js/utils.js"></script>
+  <script src="../js/capture.js"></script>
+</body>
+</html>

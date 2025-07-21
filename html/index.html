@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Photobooth</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+<!-- Unified Sticky Header -->
+<header class="header">
+  <div class="logo">
+    <a href="index.html">
+      <img src="../assets/pb-logo.png" alt="Photobooth" />
+    </a>    
+  </div>
+
+  <nav>
+    <ul>
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#privacy">Privacy Policy</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- GitHub icon only -->
+  <div class="github-icon">
+    <a href="https://github.com/jairusjustin" target="_blank" aria-label="GitHub">
+      <img src="../assets/github-icon.png" alt="GitHub" />
+    </a>
+  </div>
+
+  <!-- Hamburger button (mobile only) -->
+  <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <ul>
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#privacy">Privacy Policy</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</div>
+
+<!-- Main Content -->
+<main>
+  <div class="booth-wrapper">
+    <div class="booth-container">
+      <!-- floating logo, start button, caption, etc -->
+      <div class="tape">
+        <img src="../assets/pb-logo-no-bg.png" alt="Logo" />
+      </div>
+      <div class="by-text">
+        by
+      </div>
+      <div class="floating-logo"><img src="../assets/studio-logo-no-bg.png" alt="logo"></div>
+      <button class="start-button"><span class="camera-icon">📷</span> Start</button>
+      <div class="polaroid-caption">Capture the moment.</div>
+    </div>
+  </div>
+</main>
+
+
+
+<script src="../js/utils.js"></script>
+<script src="../js/index.js"></script>
+</body>
+</html>

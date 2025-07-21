@@ -1,0 +1,453 @@
+/* Keep your existing header height consistent */
+.header {
+  background-color: #fff;
+  padding: 20px 40px;
+  height: 72px;
+  line-height: 32px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+  box-sizing: border-box;
+}
+
+.logo img {
+  height: 40px;
+  display: block;
+}
+
+/* Center nav links */
+nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul li a {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 400;
+  color: #333;
+  transition: border-bottom 0.2s ease;
+  padding-bottom: 4px;
+}
+
+nav ul li a.active {
+  border-bottom: 1px solid #121212;
+}
+
+nav ul li a:hover {
+  border-bottom: 1px solid #121212;
+}
+
+nav ul li a.active:hover {
+  border-bottom: 2px solid #121212;
+}
+
+/* GitHub icon */
+.github-icon {
+  display: flex;
+  align-items: center;
+}
+
+.github-icon img {
+  height: 24px;
+  width: 24px;
+  margin-left: 20px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  display: block;
+}
+
+.github-icon img:hover {
+  opacity: 0.7;
+}
+
+/* Hamburger button */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1100;
+}
+
+.hamburger span {
+  display: block;
+  height: 3px;
+  background-color: #333;
+  border-radius: 2px;
+}
+
+/* --------- Responsive --------- */
+@media (max-width: 768px) {
+  nav,
+  .github-icon {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  /* Center the logo absolutely within the fixed height header */
+  .logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* Mobile menu container with minimalist look */
+.mobile-menu {
+  position: fixed;
+  top: 72px;
+  right: 0;
+  width: 100%;
+  height: calc(100vh - 72px);
+  background-color: #fdfdfd; /* subtle off-white background */
+  padding: 2rem 1.5rem;
+  box-sizing: border-box;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 1050;
+}
+
+/* Slide in from the right */
+.mobile-menu.open {
+  transform: translateX(0);
+}
+
+/* Menu list */
+.mobile-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centers the list items horizontally */
+
+}
+
+/* Menu item spacing */
+.mobile-menu ul li {
+  margin-bottom: 1.5rem;
+}
+
+/* Links */
+.mobile-menu ul li a {
+  color: #111; /* soft black */
+  font-weight: 400;
+  font-size: 1.05rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  display: inline-block;
+}
+
+/* Subtle hover */
+.mobile-menu ul li a:hover {
+  color: #555;
+}
+
+/* ---------------------- */
+/* PHOTOBOOTH STYLES */
+/* ---------------------- */
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  height: 100%;
+  background: #ecf0f1;
+  box-sizing: border-box;
+}
+
+/* ---------------------- */
+/* INDEX PAGE STYLES */
+/* ---------------------- */
+main {
+  padding-top: 72px; /* space for fixed header */
+  padding-bottom: 3rem;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff; /* fallback */
+  background-image: url('../assets/cement-texture.jpg'); /* change path as needed */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+}
+
+
+/* Wrapper for background faint polaroids */
+.booth-wrapper {
+  position: relative;
+  width: 320px;  /* same as booth-container width */
+  height: 395px; /* same as booth-container height */
+}
+
+/* Background faint polaroids */
+.booth-wrapper::before,
+.booth-wrapper::after {
+  content: "";
+  position: absolute;
+  width: 280px;
+  height: 345px;
+  background: #fff;
+  border: 14px solid #fff;
+  border-radius: 16px;
+  background-image: linear-gradient(145deg, #fafafa, #f0f0f0);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); /* stronger shadow */
+  filter: blur(1px);  /* reduced blur */
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Left polaroid */
+.booth-wrapper::before {
+  top: 30px;
+  left: -120px;
+  transform: rotate(-12deg);
+}
+
+/* Right polaroid */
+.booth-wrapper::after {
+  top: 40px;
+  right: -110px;
+  transform: rotate(8deg);
+}
+
+/* Actual polaroid container */
+.booth-container {
+  text-align: center;
+  width: 320px;
+  height: 395px;
+  background-color: #fff;
+  padding: 1.8rem 1.8rem 5rem 1.8rem;
+  border-style: solid;
+  border-color: #fff;
+  border-width: 14px 14px 70px 14px; /* top right bottom left */
+  border-radius: 16px;
+  background-image: linear-gradient(145deg, #f9f9f9, #eaeaea);
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  position: relative;
+  box-sizing: border-box;
+  margin: 3rem auto;
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.7));
+  transition: filter 0.3s ease;
+  z-index: 10; /* on top */
+}
+
+.tape {
+  position: absolute;
+  top: -28px; /* adjust as needed */
+  left: 50%;
+  transform: translateX(-50%) rotate(-5deg);
+  width: 180px; /* bigger than current tape */
+  height: 50px;
+  background: #f6e27a;
+  border-radius: 6px;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255,255,255,0.15),
+    rgba(255,255,255,0.15) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 15;
+  padding: 4px;
+  pointer-events: none; /* makes it non-interactive */
+}
+
+.tape img {
+  height: 30px;
+  width: auto;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+}
+
+.by-text {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #666;
+  text-align: center;
+  margin-top: 2rem;    /* added more space on top */
+  margin-bottom: 1rem;   
+  user-select: none;
+  letter-spacing: 0.03em;
+}
+
+/* Hover effect */
+.booth-container:hover {
+  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.85));
+}
+
+/* Floating logo animation */
+.floating-logo {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 1.5rem;
+  animation: float 3s ease-in-out infinite;
+  transform-origin: center;
+  transition: transform 0.3s ease;
+}
+
+.booth-container:hover .floating-logo {
+  transform: scale(1.05);
+}
+
+.floating-logo img {
+  height: 60px;
+  width: auto;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+/* Start Button */
+.start-button {
+  padding: 14px 28px;
+  margin-top: 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  background: #121212;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.start-button:hover {
+  background: #fff;
+  color: #121212;
+  border: 1px solid #121212;
+}
+
+/* Camera icon */
+.camera-icon {
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.start-button:hover .camera-icon {
+  color: #121212;
+}
+
+.polaroid-caption {
+  position: absolute;
+  bottom: -40px; /* inside the bottom border */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #666;
+  user-select: none;
+  margin: 0; /* remove margin */
+  text-align: center;
+  padding: 0 1rem; /* optional: some horizontal padding */
+  box-sizing: border-box;
+}
+
+
+/* ---------------------- */
+/* PHOTOCAPTURE PAGE STYLES */
+/* ---------------------- */
+
+/* Video Container and Mirroring */
+.capture-video {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 10px;
+  background: #000;
+  transform: scaleX(-1);  /* Mirror video horizontally */
+  display: block;
+  position: relative;
+}
+
+/* Countdown overlay */
+.countdown {
+  font-size: 2rem;
+  margin: 1.2rem 0;
+  color: rgba(231, 76, 60, 0.7); /* semi-transparent red */
+  height: 2.5rem;
+  position: absolute;  /* You will need to position relative parent for overlay */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(0,0,0,0.6);
+  z-index: 10;
+}
+
+/* Photo strip display for captured photos */
+.photo-strip {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  max-width: 350px;
+}
+
+.photo-strip img {
+  max-width: 80px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* ---------------------- */
+/* LAYOUT TIP FOR VIDEO + COUNTDOWN OVERLAY */
+/* ---------------------- */
+
+.video-wrapper {
+  position: relative; /* So countdown can be absolutely positioned over video */
+  display: inline-block;
+}
+
+/* ---------------------- */
+/* OPTIONAL: Capture Container to center items */
+/* ---------------------- */
+
+.capture-container {
+  text-align: center;
+  max-width: 400px;
+  margin: 2rem auto;
+}
