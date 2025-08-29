@@ -692,35 +692,38 @@ video::-webkit-media-controls-enclosure {
   background: #fff;
   box-shadow: 0 12px 30px rgba(0,0,0,0.25);
 }
-/* Left side: actions (improved spacing + design) */
+
 .modal-left {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: center; /* center vertically */
+  align-items: center; /* center horizontally */
   gap: 1rem;
-  padding-right: 1rem;
-  border-right: 1px solid #eee; /* subtle divider */
+  padding: 2rem 1rem;
+  background: #fff; /* optional light background */
 }
 
 .modal-left h3 {
-  margin-bottom: 0.5rem;
   font-size: 1.25rem;
   font-weight: 600;
   color: #222;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 .modal-left button {
-  padding: 0.8rem 1.4rem;
+  width: 100%;
+  max-width: 180px; /* uniform width */
+  padding: 0.8rem 1rem;
   border: none;
-  border-radius: 999px; /* pill style */
+  border-radius: 999px;
   background: #111;
-  color: white;
+  color: #fff;
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-align: center;
 }
 
 .modal-left button:hover {
@@ -728,7 +731,6 @@ video::-webkit-media-controls-enclosure {
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
-
 /* Right side: polaroid (kept, just refined) */
 .modal-right {
   flex: 2;
@@ -760,4 +762,24 @@ video::-webkit-media-controls-enclosure {
   object-fit: cover;
 }
 
+#photo-modal .polaroid-preview {
+  position: relative; 
+  overflow: visible; 
+}
 
+#photo-modal .polaroid-preview .polaroid-caption {
+  position: absolute;
+  bottom: -50px;       
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+}
+
+#photo-modal .polaroid-preview .polaroid-caption .logo {
+  display: block;
+  height: 30px; 
+  width: auto;
+  margin: 0 auto;
+}
