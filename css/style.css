@@ -1,4 +1,6 @@
-/* Keep your existing header height consistent */
+/* ---------------------- */
+/* GLOBAL HEADER STYLES  */
+/* ---------------------- */
 .header {
   background-color: #fff;
   padding: 20px 40px;
@@ -21,7 +23,6 @@
   display: block;
 }
 
-/* Center nav links */
 nav {
   position: absolute;
   left: 50%;
@@ -45,10 +46,7 @@ nav ul li a {
   padding-bottom: 4px;
 }
 
-nav ul li a.active {
-  border-bottom: 1px solid #121212;
-}
-
+nav ul li a.active,
 nav ul li a:hover {
   border-bottom: 1px solid #121212;
 }
@@ -57,7 +55,6 @@ nav ul li a.active:hover {
   border-bottom: 2px solid #121212;
 }
 
-/* GitHub icon */
 .github-icon {
   display: flex;
   align-items: center;
@@ -76,7 +73,6 @@ nav ul li a.active:hover {
   opacity: 0.7;
 }
 
-/* Hamburger button */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -97,7 +93,6 @@ nav ul li a.active:hover {
   border-radius: 2px;
 }
 
-/* --------- Responsive --------- */
 @media (max-width: 768px) {
   nav,
   .github-icon {
@@ -108,7 +103,6 @@ nav ul li a.active:hover {
     display: flex;
   }
 
-  /* Center the logo absolutely within the fixed height header */
   .logo {
     position: absolute;
     left: 50%;
@@ -116,14 +110,13 @@ nav ul li a.active:hover {
   }
 }
 
-/* Mobile menu container with minimalist look */
 .mobile-menu {
   position: fixed;
   top: 72px;
   right: 0;
   width: 100%;
   height: calc(100vh - 72px);
-  background-color: #fdfdfd; /* subtle off-white background */
+  background-color: #fdfdfd;
   padding: 2rem 1.5rem;
   box-sizing: border-box;
   transform: translateX(100%);
@@ -131,30 +124,25 @@ nav ul li a.active:hover {
   z-index: 1050;
 }
 
-/* Slide in from the right */
 .mobile-menu.open {
   transform: translateX(0);
 }
 
-/* Menu list */
 .mobile-menu ul {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  align-items: center; /* centers the list items horizontally */
-
+  align-items: center;
 }
 
-/* Menu item spacing */
 .mobile-menu ul li {
   margin-bottom: 1.5rem;
 }
 
-/* Links */
 .mobile-menu ul li a {
-  color: #111; /* soft black */
+  color: #111;
   font-weight: 400;
   font-size: 1.05rem;
   text-decoration: none;
@@ -162,11 +150,9 @@ nav ul li a.active:hover {
   display: inline-block;
 }
 
-/* Subtle hover */
 .mobile-menu ul li a:hover {
   color: #555;
 }
-
 /* ---------------------- */
 /* PHOTOBOOTH STYLES */
 /* ---------------------- */
@@ -198,47 +184,53 @@ main {
   box-sizing: border-box;
 }
 
-
-/* Wrapper for background faint polaroids */
-.booth-wrapper {
+/* ---------------------- */
+/* POLAROID WRAPPER */
+/* ---------------------- */
+.polaroid-wrapper {
   position: relative;
   width: 320px;  /* same as booth-container width */
   height: 395px; /* same as booth-container height */
 }
 
-/* Background faint polaroids */
-.booth-wrapper::before,
-.booth-wrapper::after {
+/* Left and right faint polaroids */
+#index-polaroid-wrapper::before,
+#index-polaroid-wrapper::after {
   content: "";
   position: absolute;
   width: 280px;
-  height: 345px;
+  height: 365px;
   background: #fff;
-  border: 14px solid #fff;
+  border-style: solid;
+  border-color: #fff;
+  border-width: 14px 14px 70px 14px;
   border-radius: 16px;
   background-image: linear-gradient(145deg, #fafafa, #f0f0f0);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); /* stronger shadow */
-  filter: blur(1px);  /* reduced blur */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  filter: blur(1px);
+  box-sizing: border-box;
   z-index: 1;
   pointer-events: none;
 }
 
 /* Left polaroid */
-.booth-wrapper::before {
+#index-polaroid-wrapper::before {
   top: 30px;
   left: -120px;
   transform: rotate(-12deg);
 }
 
 /* Right polaroid */
-.booth-wrapper::after {
+#index-polaroid-wrapper::after {
   top: 40px;
   right: -110px;
   transform: rotate(8deg);
 }
 
-/* Actual polaroid container */
-.booth-container {
+/* ---------------------- */
+/* POLAROID CONTAINER */
+/* ---------------------- */
+.polaroid-container {
   text-align: center;
   width: 320px;
   height: 395px;
@@ -249,7 +241,6 @@ main {
   border-width: 14px 14px 70px 14px; /* top right bottom left */
   border-radius: 16px;
   background-image: linear-gradient(145deg, #f9f9f9, #eaeaea);
-
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
   position: relative;
   box-sizing: border-box;
@@ -259,6 +250,14 @@ main {
   z-index: 10; /* on top */
 }
 
+/* Hover effect on polaroid container */
+.polaroid-container:hover {
+  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.85));
+}
+
+/* ---------------------- */
+/* TAPE STYLES */
+/* ---------------------- */
 .tape {
   position: absolute;
   top: -28px; /* adjust as needed */
@@ -292,24 +291,26 @@ main {
   filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
 }
 
+/* ---------------------- */
+/* BY TEXT */
+/* ---------------------- */
 .by-text {
   font-size: 0.85rem;
   font-style: italic;
   color: #666;
   text-align: center;
   margin-top: 2rem;    /* added more space on top */
-  margin-bottom: 1rem;   
+  margin-bottom: 1rem;
   user-select: none;
   letter-spacing: 0.03em;
 }
 
-/* Hover effect */
-.booth-container:hover {
-  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.85));
-}
-
-/* Floating logo animation */
+/* ---------------------- */
+/* FLOATING LOGO ANIMATION */
+/* ---------------------- */
 .floating-logo {
+  pointer-events: none;
+  user-select: none;
   display: flex;
   justify-content: center;
   margin-top: 40px;
@@ -319,7 +320,7 @@ main {
   transition: transform 0.3s ease;
 }
 
-.booth-container:hover .floating-logo {
+.polaroid-container:hover .floating-logo {
   transform: scale(1.05);
 }
 
@@ -334,7 +335,9 @@ main {
   100% { transform: translateY(0); }
 }
 
-/* Start Button */
+/* ---------------------- */
+/* START BUTTON */
+/* ---------------------- */
 .start-button {
   padding: 14px 28px;
   margin-top: 20px;
@@ -358,7 +361,7 @@ main {
   border: 1px solid #121212;
 }
 
-/* Camera icon */
+/* Camera icon inside start button */
 .camera-icon {
   font-size: 1rem;
   transition: color 0.3s ease;
@@ -368,6 +371,9 @@ main {
   color: #121212;
 }
 
+/* ---------------------- */
+/* POLAROID CAPTION */
+/* ---------------------- */
 .polaroid-caption {
   position: absolute;
   bottom: -40px; /* inside the bottom border */
@@ -380,74 +386,378 @@ main {
   user-select: none;
   margin: 0; /* remove margin */
   text-align: center;
-  padding: 0 1rem; /* optional: some horizontal padding */
+  padding: 0 1rem; /* optional horizontal padding */
   box-sizing: border-box;
 }
-
 
 /* ---------------------- */
 /* PHOTOCAPTURE PAGE STYLES */
 /* ---------------------- */
 
-/* Video Container and Mirroring */
-.capture-video {
+/* Camera Permission Overlay */
+.camera-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  max-width: 350px;
-  border-radius: 10px;
-  background: #000;
-  transform: scaleX(-1);  /* Mirror video horizontally */
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.camera-modal {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.camera-modal h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.camera-modal p {
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  color: #444;
+}
+
+.camera-modal button {
+  padding: 0.5rem 1.2rem;
+  background-color: #e53935;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.camera-modal button:hover {
+  background-color: #b71c1c;
+}
+
+
+/* Video styles */
+video {
+  width: 100%;
+  height: auto;
   display: block;
+  border-radius: 8px;
+  transform: scaleX(-1); /* Mirror horizontally */
+  background: black;
+  user-select: none;
+  pointer-events: none;
+}
+
+video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+/* Preview wrapper */
+.preview-wrapper {
   position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: black;
+}
+
+.preview-wrapper video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); /* Mirror */
+  border-radius: 8px;
+}
+
+/* Polaroid container */
+#capture-polaroid {
+  position: relative;
+  bottom: 25px;
+  width: 320px;
+  height: 395px;
+  padding: 0;
+  border-style: solid;
+  border-color: #fff;
+  border-width: 14px 14px 70px 14px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Capture button */
+.capture-button {
+  width: 40px;
+  height: 40px;
+  background-color: #111;
+  border-radius: 50%;
+  border: none;
+  position: relative;
+  cursor: pointer;
+  top: 15px;
+  margin: 0 auto;
+  transition: background-color 0.3s ease;
+}
+
+.capture-button::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 48px;
+  height: 48px;
+  border: 2px solid #111;
+  border-radius: 50%;
+  pointer-events: none;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.capture-button:hover,
+.capture-button:focus {
+  background-color: #e53935;
+}
+
+.capture-button:hover::before,
+.capture-button:focus::before {
+  border-color: #e53935;
+}
+
+.capture-button:active {
+  background-color: #b71c1c;
+}
+
+.capture-button:active::before {
+  border-color: #b71c1c;
+}
+
+/* Timer button */
+.timer-button {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #111;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  user-select: none;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: color 0.3s ease;
+}
+
+.timer-button:hover {
+  color: #e53935;
+  outline: none;
+}
+
+.timer-icon {
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.timer-icon::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+.timer-icon::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1.5px;
+  height: 6px;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+.timer-text {
+  display: inline-block;
+  width: 30px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Countdown overlay */
-.countdown {
-  font-size: 2rem;
-  margin: 1.2rem 0;
-  color: rgba(231, 76, 60, 0.7); /* semi-transparent red */
-  height: 2.5rem;
-  position: absolute;  /* You will need to position relative parent for overlay */
+.countdown-overlay {
+  position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0);
+  font-size: 4rem;
+  color: white;
+  font-weight: 900;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
   pointer-events: none;
-  user-select: none;
-  font-weight: 700;
-  text-shadow: 0 0 8px rgba(0,0,0,0.6);
+  opacity: 0;
   z-index: 10;
+  user-select: none;
 }
 
-/* Photo strip display for captured photos */
-.photo-strip {
-  margin-top: 1rem;
+.countdown-overlay.show {
+  animation: pop-countdown 0.4s ease forwards;
+}
+
+@keyframes pop-countdown {
+  0% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+.photo-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
   display: flex;
   justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  max-width: 350px;
+  align-items: center;
+  z-index: 1000;
 }
 
-.photo-strip img {
-  max-width: 80px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+.photo-modal-content {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  max-width: 90%;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ---------------------- */
-/* LAYOUT TIP FOR VIDEO + COUNTDOWN OVERLAY */
-/* ---------------------- */
-
-.video-wrapper {
-  position: relative; /* So countdown can be absolutely positioned over video */
-  display: inline-block;
+/* Image fits perfectly inside */
+.photo-modal-content img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0; /* Matches the live preview */
+  border: none;
 }
 
-/* ---------------------- */
-/* OPTIONAL: Capture Container to center items */
-/* ---------------------- */
 
-.capture-container {
+.hidden {
+  display: none;
+}
+
+
+/* Modal split layout */
+.photo-modal-content {
+  display: flex;
+  gap: 2rem;
+  width: 700px;
+  max-width: 90%;
+  padding: 2rem;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+/* Left side: actions (improved spacing + design) */
+.modal-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  padding-right: 1rem;
+  border-right: 1px solid #eee; /* subtle divider */
+}
+
+.modal-left h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.modal-left button {
+  padding: 0.8rem 1.4rem;
+  border: none;
+  border-radius: 999px; /* pill style */
+  background: #111;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
   text-align: center;
-  max-width: 400px;
-  margin: 2rem auto;
 }
+
+.modal-left button:hover {
+  background: #e53935;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Right side: polaroid (kept, just refined) */
+.modal-right {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 1rem;
+}
+
+.polaroid-preview {
+  width: 320px; 
+  height: 345px;
+  background: #fff;
+  border-style: solid;
+  border-color: #fff;
+  border-width: 14px 14px 70px 14px;
+  border-radius: 16px;
+  background-image: linear-gradient(145deg, #f9f9f9, #eaeaea);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.polaroid-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+

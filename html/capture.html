@@ -2,75 +2,101 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Capture - Photobooth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Capture Photo</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 </head>
 <body>
 
-  <!-- Normal Header -->
-  <header class="normal-header">
-      <div class="logo">
-        <a href="index.html">
-          <img src="../assets/pb_logo.png" alt="photoboot" />
-        </a>    
-      </div>
-      <nav>
-          <ul>
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#privacy">Privacy Policy</a></li>
-          <li><a href="#contact">Contact</a></li>
-          </ul>
-      </nav>
-      <div class="github-icon">
-          <a href="https://github.com/your-username" target="_blank">
-          <img src="../assets/github-icon.png" alt="GitHub" />
-          </a>
-      </div>
-  </header>
-
-  <!-- Sticky Header -->
-  <header class="sticky-header" id="stickyHeader">
-      <div class="logo">
-        <a href="index.html">
-          <img src="../assets/pb_logo.png" alt="photoboot" />
-        </a>    
-      </div>
-      <nav>
-          <ul>
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#privacy">Privacy Policy</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </nav>
-      <div class="github-icon">
-          <a href="https://github.com/your-username" target="_blank">
-          <img src="../assets/github-icon.png" alt="GitHub" />
-          </a>
-      </div>
-  </header>
-
-<main id="home">
-  <div class="booth-container" style="text-align:center;">
-    <h2>Get ready for your photo!</h2>
-
-    <div class="video-wrapper">
-      <video id="video" autoplay playsinline class="capture-video"></video>
-      <div id="countdown" class="countdown"></div>
-    </div>
-
-    <button id="start" class="start-button" hidden>
-      Start <i class="fas fa-camera camera-icon"></i>
-    </button>
-
-    <div id="strip" class="photo-strip"></div>
+<!-- Sticky Header -->
+<header class="header">
+  <div class="logo">
+    <a href="index.html">
+      <img src="../assets/pb-logo.png" alt="Photobooth" />
+    </a>    
   </div>
 
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#privacy">Privacy Policy</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="github-icon">
+    <a href="https://github.com/jairusjustin" target="_blank" aria-label="GitHub">
+      <img src="../assets/github-icon.png" alt="GitHub" />
+    </a>
+  </div>
+
+  <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#privacy">Privacy Policy</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</div>
+
+<!-- Camera Permission Overlay -->
+<div id="camera-permission-overlay" class="camera-overlay">
+  <div class="camera-modal">
+    <h2>Allow Camera Access</h2>
+    <p>To use the photobooth, please allow camera access.</p>
+    <button id="allow-camera-btn">Allow</button>
+  </div>
+</div>
+
+<!-- Main Content -->
+<main>
+  <div class="polaroid-wrapper">
+    <div class="polaroid-container"  id="capture-polaroid">
+      <div class="preview-wrapper">
+        <video id="polaroid-preview" autoplay muted playsinline hidden></video>
+        <div id="countdown-overlay" class="countdown-overlay"></div>
+      </div>
+      <div class="polaroid-caption">
+        <button id="start" class="capture-button" aria-label="Capture photo"></button>
+        <button id="timer-btn" class="timer-button" title="Timer: 0 seconds">
+          <span class="timer-icon"></span>
+          <span class="timer-text">0s</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+<div id="photo-modal" class="photo-modal hidden">
+  <div class="photo-modal-content">
+    <div class="modal-left">
+      <h3>Options</h3>
+      <button id="download-btn">Download</button>
+      <button id="close-btn">Close</button>
+    </div>
+    <div class="modal-right">
+      <div class="polaroid-preview">
+        <img id="modal-image" alt="Captured Photo" />
+      </div>
+    </div>
+  </div>
+</div>
+
 </main>
-  <script src="../js/utils.js"></script>
-  <script src="../js/capture.js"></script>
+
+
+<script src="../js/utils.js"></script>
+<script src="../js/capture.js"></script>
 </body>
 </html>
