@@ -875,3 +875,117 @@ video::-webkit-media-controls-enclosure {
   width: auto;
   margin: 0 auto;
 }
+
+
+/* ---------------------- */
+/* PHOTO STRIP LAYOUT     */
+/* ---------------------- */
+/* ================================================== */
+/* PHOTO STRIP PAGE STYLES
+/* ================================================== */
+
+/* ---------------------- */
+/* PHOTOSTRIP FLEX WRAPPER */
+/* ---------------------- */
+.photostrip-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+.photostrip-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.photostrip-wrapper {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+
+/* ---------------------- */
+/* PHOTOSTRIP CONTAINER (RIGHT PANEL) */
+/* ---------------------- */
+.photostrip-container {
+  flex: 1;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* ---------------------- */
+/* PHOTOSTRIP PREVIEW AREA */
+/* ---------------------- */
+/* ---------------------- */
+
+/* ---------------------- */
+/* MINI PHOTO STRIP PREVIEW (RIGHT PANEL) - Smaller Version */
+/* ---------------------- */
+#photostrip-preview {
+  display: flex;
+  flex-direction: column;
+  width: 160px;             /* smaller width */
+  height: 475px;            /* 155px * 3 + 4px * 2 gaps */
+  
+  /* Polaroid-style border */
+  border-style: solid;
+  border-color: #fff;
+  border-width: 8px; 
+  border-radius: 10px;
+  background-color: #fff;  
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+}
+
+/* Individual miniature photo slots */
+.strip-slot {
+  width: 100%;
+  height: 150px;           /* smaller height */
+  background-image: linear-gradient(145deg, #f9f9f9, #eaeaea);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 4px;      /* gap between photos */
+}
+
+.strip-slot:last-child {
+  margin-bottom: 0;       
+}
+
+.strip-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+/* Photostrip caption/logo */
+.photostrip-caption {
+  position: absolute;
+  bottom: -2px;        /* smaller distance from bottom */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;          /* smaller width for miniature strip */
+  text-align: center;
+  pointer-events: none;
+}
+
+.photostrip-caption .logo {
+  height: 15px;        /* smaller than original 30px */
+  width: auto;
+  display: block;
+  margin: 0 auto;
+  opacity: 0.85;
+}

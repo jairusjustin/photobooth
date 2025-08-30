@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "polaroid.html";
   });
   stripOption?.addEventListener("click", () => {
-    window.location.href = "capture.html";
+    window.location.href = "photostrip.html";
   });
 
   /* ---------------------- */
