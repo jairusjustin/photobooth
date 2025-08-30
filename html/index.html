@@ -62,19 +62,29 @@
         by
       </div>
       <div class="floating-logo"><img src="../assets/studio-logo-no-bg.png" alt="logo"></div>
-        <a href="capture.html" class="button-link">
-          <button class="start-button">
-            <span class="camera-icon">📷</span> Start
-          </button>
-        </a>      
+        
+      <!-- Start button now opens modal -->
+      <button id="open-modal-btn" class="start-button">
+        <span class="camera-icon">📷</span> Start
+      </button>      
+
       <div class="polaroid-caption">Capture the moment.</div>
     </div>
   </div>
 </main>
 
+<!-- Modal -->
+<div id="startModal" class="modal hidden">
+  <div class="modal-content">
+    <h2>Select a Style</h2>
+    <div class="options">
+      <button id="polaroid-option" class="option-btn">📸 Polaroid</button>
+      <button id="strip-option" class="option-btn">🎞️ Photo Strip</button>
+    </div>
+    <button id="close-modal-btn" class="close-btn">Cancel</button>
+  </div>
+</div>
 
-
-<script src="../js/utils.js"></script>
-<script src="../js/index.js"></script>
+<script src="../js/main.js"></script>
 </body>
 </html>
