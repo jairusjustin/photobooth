@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  /* ---------------------- */
-  /* NAVIGATION + MOBILE MENU */
-  /* ---------------------- */
+  /* NAVIGATION + MOBILE MENU (unchanged) */
   const hamburger = document.querySelector('.hamburger');
   const mobileMenu = document.createElement('div');
   mobileMenu.classList.add('mobile-menu');
@@ -26,9 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     mobileMenu.classList.toggle('open');
   });
 
-  /* ---------------------- */
-  /* START MODAL + STYLE SELECTION */
-  /* ---------------------- */
+  /* START MODAL + STYLE SELECTION (navigate only) */
   const openModalBtn = document.getElementById("open-modal-btn");
   const modal = document.getElementById("startModal");
   const closeModalBtn = document.getElementById("close-modal-btn");
@@ -41,13 +37,12 @@ document.addEventListener("DOMContentLoaded", () => {
   polaroidOption?.addEventListener("click", () => {
     window.location.href = "polaroid.html";
   });
+
   stripOption?.addEventListener("click", () => {
     window.location.href = "photostrip.html";
   });
 
-  /* ---------------------- */
-  /* TIMER + COUNTDOWN LOGIC */
-  /* ---------------------- */
+  /* TIMER + COUNTDOWN (if you use it on index, keep; otherwise you can remove) */
   const timerBtn = document.getElementById("timer-btn");
   const timerText = timerBtn?.querySelector(".timer-text");
   const countdownOverlay = document.getElementById("countdown-overlay");
@@ -57,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   timerBtn?.addEventListener("click", () => {
     currentTimerIndex = (currentTimerIndex + 1) % timerValues.length;
-    timerText.textContent = `${timerValues[currentTimerIndex]}s`;
+    if (timerText) timerText.textContent = `${timerValues[currentTimerIndex]}s`;
   });
 
   function showCountdown(seconds) {
@@ -83,58 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Expose globally
   window.showCountdown = showCountdown;
   window.getCurrentDelay = () => timerValues[currentTimerIndex];
 
-  /* ---------------------- */
-  /* CAMERA INITIALIZATION + PERMISSION */
-  /* ---------------------- */
-  const video = document.getElementById('polaroid-preview'); 
-  const permissionOverlay = document.getElementById('camera-permission-overlay');
-
-  async function initCamera() {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
-      video.srcObject = stream;
-      await video.play();
-      video.hidden = false;
-      permissionOverlay.style.display = 'none';
-    } catch (err) {
-      console.error('Camera access error:', err);
-      permissionOverlay.style.display = 'flex';
-    }
-  }
-
-  function setupCameraPermission() {
-    const allowBtn = document.getElementById('allow-camera-btn');
-    allowBtn?.addEventListener('click', () => initCamera());
-
-    if (navigator.permissions && navigator.permissions.query) {
-      navigator.permissions.query({ name: 'camera' })
-        .then(status => {
-          if (status.state === 'granted') {
-            initCamera();
-          } else {
-            permissionOverlay.style.display = 'flex';
-          }
-
-          status.onchange = () => {
-            if (status.state === 'granted') {
-              initCamera();
-              permissionOverlay.style.display = 'none';
-            } else {
-              permissionOverlay.style.display = 'flex';
-            }
-          };
-        })
-        .catch(() => {
-          permissionOverlay.style.display = 'flex';
-        });
-    } else {
-      permissionOverlay.style.display = 'flex';
-    }
-  }
-
-  setupCameraPermission();
 });

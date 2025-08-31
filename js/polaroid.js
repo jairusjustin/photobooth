@@ -2,8 +2,33 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ---------------------- */
   /* ELEMENTS */
   /* ---------------------- */
-  const startBtn = document.getElementById("start");
   const video = document.getElementById("polaroid-preview");
+  const permissionOverlay = document.getElementById("camera-permission-overlay");
+  const allowBtn = document.getElementById("allow-camera-btn");
+
+  // CAMERA INITIALIZATION
+  async function initCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "user" },
+        audio: false
+      });
+      video.srcObject = stream;
+      await video.play();
+
+      permissionOverlay.classList.add("hidden");
+    } catch (err) {
+      console.error("Camera access denied:", err);
+      permissionOverlay.classList.remove("hidden");
+    }
+  }
+
+  allowBtn?.addEventListener("click", () => initCamera());
+
+
+  initCamera();
+
+  const startBtn = document.getElementById("start");
   const photoModal = document.getElementById("photo-modal");
   const modalImage = document.getElementById("modal-image");
   const captureContainer = document.getElementById("capture-polaroid");

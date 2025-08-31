@@ -880,13 +880,7 @@ video::-webkit-media-controls-enclosure {
 /* ---------------------- */
 /* PHOTO STRIP LAYOUT     */
 /* ---------------------- */
-/* ================================================== */
-/* PHOTO STRIP PAGE STYLES
-/* ================================================== */
 
-/* ---------------------- */
-/* PHOTOSTRIP FLEX WRAPPER */
-/* ---------------------- */
 .photostrip-page-wrapper {
   display: flex;
   flex-direction: column;
@@ -926,14 +920,10 @@ video::-webkit-media-controls-enclosure {
 /* PHOTOSTRIP PREVIEW AREA */
 /* ---------------------- */
 /* ---------------------- */
-
-/* ---------------------- */
-/* MINI PHOTO STRIP PREVIEW (RIGHT PANEL) - Smaller Version */
-/* ---------------------- */
 #photostrip-preview {
   display: flex;
   flex-direction: column;
-  width: 160px;             /* smaller width */
+  width: 140px;             /* smaller width */
   height: 475px;            /* 155px * 3 + 4px * 2 gaps */
   
   /* Polaroid-style border */
