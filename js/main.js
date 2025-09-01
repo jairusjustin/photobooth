@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
   mobileMenu.innerHTML = `
     <ul>
       <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#privacy">Privacy Policy</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="privacy.html">Privacy Policy</a></li>
       <li><a href="#contact">Contact</a></li>
       <li>
         <a href="https://github.com/jairusjustin" target="_blank">
