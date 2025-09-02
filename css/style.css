@@ -1061,17 +1061,18 @@ video::-webkit-media-controls-enclosure {
 #photostrip-preview {
   display: flex;
   flex-direction: column;
-  width: 140px;             /* smaller width */
-  height: 475px;            /* 155px * 3 + 4px * 2 gaps */
+  width: 140px;             
+  height: 475px;            
   
   /* Polaroid-style border */
   border-style: solid;
   border-color: #fff;
-  border-width: 8px; 
+  border-width: 8px 8px 16px 8px;  /* smaller bottom border */
   border-radius: 10px;
   background-color: #fff;  
   box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-  overflow: hidden;
+  
+  overflow: visible;  /* allow caption to extend outside */
   padding: 0;
   position: relative;
 }
@@ -1079,13 +1080,13 @@ video::-webkit-media-controls-enclosure {
 /* Individual miniature photo slots */
 .strip-slot {
   width: 100%;
-  height: 150px;           /* smaller height */
+  height: 150px;           
   background-image: linear-gradient(145deg, #f9f9f9, #eaeaea);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin-bottom: 4px;      /* gap between photos */
+  margin-bottom: 4px;      
 }
 
 .strip-slot:last-child {
@@ -1098,20 +1099,19 @@ video::-webkit-media-controls-enclosure {
   object-fit: cover;
 }
 
-
 /* Photostrip caption/logo */
-.photostrip-caption {
+#photostrip-preview .photostrip-caption {
   position: absolute;
-  bottom: -2px;        /* smaller distance from bottom */
+  bottom: -8px;          /* negative to hang slightly below strip */
   left: 50%;
   transform: translateX(-50%);
-  width: 60%;          /* smaller width for miniature strip */
+  width: 80%;             /* more room for text/logo */
   text-align: center;
   pointer-events: none;
 }
 
-.photostrip-caption .logo {
-  height: 15px;        /* smaller than original 30px */
+#photostrip-preview .photostrip-caption .logo {
+  height: 15px;           /* slightly bigger than 15px */
   width: auto;
   display: block;
   margin: 0 auto;

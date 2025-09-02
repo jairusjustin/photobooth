@@ -48,46 +48,51 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ---------------------- */
   /* PHOTOSTRIP CAPTURE */
   /* ---------------------- */
-startBtn.addEventListener("click", () => {
-  if (currentSlot >= slots.length) return;
+  startBtn.addEventListener("click", async () => {
+    if (currentSlot >= slots.length) return;
 
-  const canvas = document.createElement("canvas");
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  const ctx = canvas.getContext("2d");
+    // Get current countdown delay
+    const delay = window.getCurrentDelay?.() || 0;
+    await window.showCountdown?.(delay);
 
-  // Mirror the image
-  ctx.translate(canvas.width, 0);
-  ctx.scale(-1, 1);
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    // Capture video frame to canvas
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext("2d");
 
-  const imgData = canvas.toDataURL("image/png");
+    // Mirror the image
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-  // Populate page preview slot
-  const img = new Image();
-  img.src = imgData;
-  img.style.width = "100%";
-  img.style.height = "100%";
-  img.style.objectFit = "cover";
-  img.style.objectPosition = "center";
-  slots[currentSlot].innerHTML = "";
-  slots[currentSlot].appendChild(img);
+    const imgData = canvas.toDataURL("image/png");
 
-  // Also save the captured data for modal population
-  slots[currentSlot].dataset.imgData = imgData;
+    // Show preview in current slot
+    const img = new Image();
+    img.src = imgData;
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.objectFit = "cover";
+    img.style.objectPosition = "center";
 
-  currentSlot++;
+    slots[currentSlot].innerHTML = "";
+    slots[currentSlot].appendChild(img);
 
-  if (currentSlot === slots.length) {
-    setTimeout(() => {
-      // Show modal template
-      photoModal.classList.remove("hidden");
-      photoModal.classList.add("show");
+    // Save captured data for modal
+    slots[currentSlot].dataset.imgData = imgData;
+    currentSlot++;
 
-      // Populate modal slots from saved data
-      slots.forEach((slot, index) => {
-        const data = slot.dataset.imgData;
-        if (data) {
+    // If all slots filled, show modal
+    if (currentSlot === slots.length) {
+      setTimeout(() => {
+        photoModal.classList.remove("hidden");
+        photoModal.classList.add("show");
+
+        slots.forEach((slot, index) => {
+          const data = slot.dataset.imgData;
+          if (!data) return;
+
           const modalImg = new Image();
           modalImg.src = data;
           modalImg.style.width = "100%";
@@ -96,122 +101,145 @@ startBtn.addEventListener("click", () => {
           modalImg.style.objectPosition = "center";
 
           const modalSlot = document.getElementById(`modal-slot-${index + 1}`);
-          modalSlot.innerHTML = ""; // clear old image
+          modalSlot.innerHTML = "";
           modalSlot.appendChild(modalImg);
-        }
-      });
-    }, 500);
-  }
-});
-
-/* ---------------------- */
-/* DOWNLOAD PHOTOSTRIP */
-/* ---------------------- */
-downloadBtn?.addEventListener("click", () => {
-  const photostrip = document.getElementById("photostrip-preview");
-  if (!photostrip) return;
-
-  const canvas = document.createElement("canvas");
-  const width = 140;
-  const height = 475;
-  const border = 8;
-  const radius = 10; // matches border-radius in CSS
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext("2d");
-
-  // Draw rounded white background
-  ctx.fillStyle = "#fff";
-  ctx.beginPath();
-  ctx.moveTo(radius, 0);
-  ctx.lineTo(width - radius, 0);
-  ctx.quadraticCurveTo(width, 0, width, radius);
-  ctx.lineTo(width, height - radius);
-  ctx.quadraticCurveTo(width, height, width - radius, height);
-  ctx.lineTo(radius, height);
-  ctx.quadraticCurveTo(0, height, 0, height - radius);
-  ctx.lineTo(0, radius);
-  ctx.quadraticCurveTo(0, 0, radius, 0);
-  ctx.closePath();
-  ctx.fill();
-
-  // Clip to rounded rectangle for images
-  ctx.save();
-  ctx.clip();
-
-  // Draw each slot image
-  const slots = photostrip.querySelectorAll(".strip-slot");
-  const slotGap = 4;
-  slots.forEach((slot, index) => {
-    const img = slot.querySelector("img");
-    if (!img) return;
-
-    const slotWidth = width;
-    const slotHeight = 150;
-    const slotY = index * (slotHeight + slotGap);
-
-    const imgRatio = img.naturalWidth / img.naturalHeight;
-    const slotRatio = slotWidth / slotHeight;
-    let sWidth, sHeight, sx, sy;
-
-    if (imgRatio > slotRatio) {
-      sHeight = img.naturalHeight;
-      sWidth = sHeight * slotRatio;
-      sx = (img.naturalWidth - sWidth) / 2;
-      sy = 0;
-    } else {
-      sWidth = img.naturalWidth;
-      sHeight = sWidth / slotRatio;
-      sx = 0;
-      sy = (img.naturalHeight - sHeight) / 2;
+        });
+      }, 500);
     }
-
-    ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, slotY, slotWidth, slotHeight);
+    // --- Fix: remove button focus so it stops showing red ---
+    startBtn.blur();
   });
 
-  ctx.restore(); // remove clip
+  /* ---------------------- */
+  /* PHOTOSTRIP DOWNLOAD */
+  /* ---------------------- */
+  downloadBtn?.addEventListener("click", () => {
+    const photostrip = document.getElementById("photostrip-preview");
+    if (!photostrip) return;
 
-  // Draw border around canvas
-  ctx.strokeStyle = "#fff";
-  ctx.lineWidth = border;
-  ctx.beginPath();
-  ctx.moveTo(radius, border/2);
-  ctx.lineTo(width - radius, border/2);
-  ctx.quadraticCurveTo(width - border/2, border/2, width - border/2, radius);
-  ctx.lineTo(width - border/2, height - radius);
-  ctx.quadraticCurveTo(width - border/2, height - border/2, width - radius, height - border/2);
-  ctx.lineTo(radius, height - border/2);
-  ctx.quadraticCurveTo(border/2, height - border/2, border/2, height - radius);
-  ctx.lineTo(border/2, radius);
-  ctx.quadraticCurveTo(border/2, border/2, radius, border/2);
-  ctx.closePath();
-  ctx.stroke();
+    // Scale and dimension settings
+    const scale = 4.2;
+    const photoWidth = 140 * scale;
+    const photoHeight = 475 * scale;
+    const borderTop = 8 * scale;
+    const borderSides = 8 * scale;
+    const borderBottom = 16 * scale;
+    const radius = 10 * scale;
+    const slotHeight = 150 * scale;
+    const slotGap = 4 * scale;
+    const canvasWidth = photoWidth + borderSides * 2;
+    const canvasHeight = photoHeight + borderTop + borderBottom;
 
-  // Draw logo
-  const logo = photostrip.querySelector(".photostrip-caption .logo");
-  if (logo) {
-    const logoImg = new Image();
-    logoImg.src = logo.src;
-    logoImg.onload = () => {
-      const logoHeight = 15;
-      const logoRatio = logoImg.width / logoImg.height;
-      const logoWidth = logoHeight * logoRatio;
-      const x = (canvas.width - logoWidth) / 2;
-      const y = canvas.height - logoHeight - 2;
-      ctx.drawImage(logoImg, x, y, logoWidth, logoHeight);
+    const canvas = document.createElement("canvas");
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    const ctx = canvas.getContext("2d");
 
-      // Trigger download
-      const link = document.createElement("a");
-      link.href = canvas.toDataURL("image/png");
-      link.download = `photostrip-${Date.now()}.png`;
-      link.click();
-    };
+    // Draw rounded white background
+    ctx.fillStyle = "#fff";
+    ctx.beginPath();
+    ctx.moveTo(radius, 0);
+    ctx.lineTo(canvasWidth - radius, 0);
+    ctx.quadraticCurveTo(canvasWidth, 0, canvasWidth, radius);
+    ctx.lineTo(canvasWidth, canvasHeight - radius);
+    ctx.quadraticCurveTo(canvasWidth, canvasHeight, canvasWidth - radius, canvasHeight);
+    ctx.lineTo(radius, canvasHeight);
+    ctx.quadraticCurveTo(0, canvasHeight, 0, canvasHeight - radius);
+    ctx.lineTo(0, radius);
+    ctx.quadraticCurveTo(0, 0, radius, 0);
+    ctx.closePath();
+    ctx.fill();
+
+    // Clip for photo slots
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(radius, borderTop);
+    ctx.lineTo(canvasWidth - radius, borderTop);
+    ctx.quadraticCurveTo(canvasWidth - borderSides, borderTop, canvasWidth - borderSides, radius + borderTop);
+    ctx.lineTo(canvasWidth - borderSides, canvasHeight - borderBottom - radius);
+    ctx.quadraticCurveTo(canvasWidth - borderSides, canvasHeight - borderBottom, canvasWidth - radius, canvasHeight - borderBottom);
+    ctx.lineTo(radius, canvasHeight - borderBottom);
+    ctx.quadraticCurveTo(borderSides, canvasHeight - borderBottom, borderSides, canvasHeight - borderBottom - radius);
+    ctx.lineTo(borderSides, radius + borderTop);
+    ctx.quadraticCurveTo(borderSides, borderTop, radius, borderTop);
+    ctx.closePath();
+    ctx.clip();
+
+    // Draw each photo slot
+    const slots = photostrip.querySelectorAll(".strip-slot");
+    slots.forEach((slot, index) => {
+      const img = slot.querySelector("img");
+      if (!img) return;
+
+      const slotY = borderTop + index * (slotHeight + slotGap);
+      const slotRatio = photoWidth / slotHeight;
+      const imgRatio = img.naturalWidth / img.naturalHeight;
+
+      let sx = 0, sy = 0, sWidth = img.naturalWidth, sHeight = img.naturalHeight;
+
+      if (imgRatio > slotRatio) {
+        sHeight = img.naturalHeight;
+        sWidth = sHeight * slotRatio;
+        sx = (img.naturalWidth - sWidth) / 2;
+      } else {
+        sWidth = img.naturalWidth;
+        sHeight = sWidth / slotRatio;
+        sy = (img.naturalHeight - sHeight) / 2;
+      }
+
+      ctx.drawImage(img, sx, sy, sWidth, sHeight, borderSides, slotY, photoWidth, slotHeight);
+    });
+    ctx.restore();
+
+    // Draw border
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = borderSides;
+    ctx.beginPath();
+    ctx.moveTo(radius, borderTop / 2);
+    ctx.lineTo(canvasWidth - radius, borderTop / 2);
+    ctx.quadraticCurveTo(canvasWidth - borderSides / 2, borderTop / 2, canvasWidth - borderSides / 2, radius + borderTop / 2);
+    ctx.lineTo(canvasWidth - borderSides / 2, canvasHeight - radius);
+    ctx.quadraticCurveTo(canvasWidth - borderSides / 2, canvasHeight - borderBottom / 2, canvasWidth - radius, canvasHeight - borderBottom / 2);
+    ctx.lineTo(radius, canvasHeight - borderBottom / 2);
+    ctx.quadraticCurveTo(borderSides / 2, canvasHeight - borderBottom / 2, borderSides / 2, canvasHeight - radius);
+    ctx.lineTo(borderSides / 2, radius + borderTop / 2);
+    ctx.quadraticCurveTo(borderSides / 2, borderTop / 2, radius, borderTop / 2);
+    ctx.closePath();
+    ctx.stroke();
+
+    // Draw logo
+    const logo = photostrip.querySelector(".photostrip-caption .logo");
+    if (logo) {
+      const logoImg = new Image();
+      logoImg.src = logo.src;
+      logoImg.onload = () => {
+        const logoHeight = 15 * scale;
+        const logoRatio = logoImg.width / logoImg.height;
+        const logoWidth = logoHeight * logoRatio;
+        const x = (canvasWidth - logoWidth) / 2;
+        const y = canvasHeight - borderBottom + (borderBottom - logoHeight) / 2 - 8 * scale;
+        ctx.drawImage(logoImg, x, y, logoWidth, logoHeight);
+
+        // Trigger download
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = getPhotostripFilename();
+        link.click();
+      };
+    }
+  });
+
+  function getPhotostripFilename() {
+    const now = new Date();
+    const pad = (n) => n.toString().padStart(2, "0");
+    const yy = now.getFullYear().toString().slice(-2);
+    const mm = pad(now.getMonth() + 1);
+    const dd = pad(now.getDate());
+    const hh = pad(now.getHours());
+    const min = pad(now.getMinutes());
+    const ss = pad(now.getSeconds());
+    return `photostrip-${yy}${mm}${dd}-${hh}${min}${ss}.png`;
   }
-});
-
-
-
-
 
   /* ---------------------- */
   /* MODAL CONTROLS */
@@ -219,14 +247,9 @@ downloadBtn?.addEventListener("click", () => {
   closeBtn?.addEventListener("click", () => window.location.href = "index.html");
 
   retakeBtn?.addEventListener("click", () => {
-    // Hide modal
     photoModal.classList.remove("show");
     photoModal.classList.add("hidden");
-
-    // Clear the main photostrip slots
     slots.forEach(slot => slot.innerHTML = "");
-
-    // Reset current slot counter
     currentSlot = 0;
   });
 
@@ -234,8 +257,6 @@ downloadBtn?.addEventListener("click", () => {
     if (e.target === photoModal) {
       photoModal.classList.remove("show");
       photoModal.classList.add("hidden");
-
-      // Clear modal slots but keep template
       modalSlots.forEach(slot => slot.innerHTML = "");
     }
   });
