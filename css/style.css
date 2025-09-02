@@ -3,7 +3,7 @@
 /* ================================================== */
 .header {
   background-color: #fff;
-  padding: 20px 40px;
+  padding: 20px 100px;
   height: 72px;
   line-height: 32px;
   position: fixed;
@@ -84,6 +84,12 @@ nav ul li a.active:hover {
   cursor: pointer;
   padding: 0;
   z-index: 1100;
+  
+  /* Fix position independent of header padding */
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .hamburger span {
@@ -323,15 +329,30 @@ main {
 }
 
 /* ================================================== */
-/* POLAROID WRAPPER
+/* INDEX PAGE POLAROID WRAPPER
 /* ================================================== */
-.polaroid-wrapper {
+#index-polaroid-wrapper {
   position: relative;
   width: 320px; 
   height: 395px; 
+  margin: 30px auto 0 auto;       /* center horizontally */
+  display: flex;
+  justify-content: center;   /* center main polaroid horizontally */
+  align-items: center;       /* center main polaroid vertically */
+  z-index: 10;               /* ensure main polaroid is above faint ones */
 }
 
-/* Left and right faint polaroids */
+/* Main polaroid container on index only */
+#index-polaroid-wrapper .polaroid-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 320px;
+}
+
+/* Left and right faint polaroids (index only) */
 #index-polaroid-wrapper::before,
 #index-polaroid-wrapper::after {
   content: "";
@@ -347,7 +368,7 @@ main {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
   filter: blur(1px);
   box-sizing: border-box;
-  z-index: 1;
+  z-index: 1;           /* below main polaroid */
   pointer-events: none;
 }
 
@@ -364,6 +385,20 @@ main {
   right: -110px;
   transform: rotate(8deg);
 }
+
+/* Responsive adjustments for index */
+@media screen and (max-width: 400px) {
+  #index-polaroid-wrapper {
+    width: 90%;
+    height: auto;
+  }
+
+  #index-polaroid-wrapper::before,
+  #index-polaroid-wrapper::after {
+    display: none; /* hide faint polaroids on small screens */
+  }
+}
+
 
 /* ================================================== */
 /* POLAROID CONTAINER
@@ -705,6 +740,7 @@ video::-webkit-media-controls-enclosure {
   width: 320px;
   height: 395px;
   padding: 0;
+  margin: 60px auto 0 auto; 
   border-style: solid;
   border-color: #fff;
   border-width: 14px 14px 70px 14px;
@@ -1102,16 +1138,16 @@ video::-webkit-media-controls-enclosure {
 /* Photostrip caption/logo */
 #photostrip-preview .photostrip-caption {
   position: absolute;
-  bottom: -8px;          /* negative to hang slightly below strip */
+  bottom: -8px;         
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;             /* more room for text/logo */
+  width: 80%;            
   text-align: center;
   pointer-events: none;
 }
 
 #photostrip-preview .photostrip-caption .logo {
-  height: 15px;           /* slightly bigger than 15px */
+  height: 15px;          
   width: auto;
   display: block;
   margin: 0 auto;

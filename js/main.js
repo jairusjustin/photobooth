@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <li><a href="index.html" class="active">Home</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="privacy.html">Privacy Policy</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="contact.html">Contact</a></li>
       <li>
         <a href="https://github.com/jairusjustin" target="_blank">
           <img src="../assets/github-icon.png" alt="GitHub" style="height: 24px; width: 24px;" />
