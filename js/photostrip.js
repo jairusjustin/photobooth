@@ -4,7 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ---------------------- */
   const video = document.getElementById("polaroid-preview");
   const permissionOverlay = document.getElementById("camera-permission-overlay");
-  const allowBtn = document.getElementById("allow-camera-btn");
+  const dots = document.getElementById("camera-dots");
+  const retryBtn = document.getElementById("retry-camera")
+  const overlayCloseBtn = permissionOverlay.querySelector(".close-overlay");
+  const previewTextOverlay = document.getElementById("preview-text-overlay");
   const startBtn = document.getElementById("start");
   const closeBtn = document.getElementById("close-btn");
   const retakeBtn = document.getElementById("retake-btn");
@@ -24,26 +27,90 @@ document.addEventListener("DOMContentLoaded", () => {
   const photoModal = document.getElementById("photo-modal");
   let currentSlot = 0;
 
-  /* ---------------------- */
-  /* CAMERA INITIALIZATION */
-  /* ---------------------- */
-  async function initCamera() {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" },
-        audio: false
-      });
-      video.srcObject = stream;
-      await video.play();
-      permissionOverlay.classList.add("hidden");
-    } catch (err) {
-      console.error("Camera access denied:", err);
-      permissionOverlay.classList.remove("hidden");
-    }
-  }
+let dotsToRetryTimeout;
 
-  allowBtn?.addEventListener("click", () => initCamera());
-  initCamera();
+// ----------------------
+// PREVIEW OVERLAY
+// ----------------------
+function showPreviewOverlay() {
+  previewTextOverlay.style.opacity = "1";
+}
+
+function hidePreviewOverlay() {
+  previewTextOverlay.style.opacity = "0";
+}
+
+// ----------------------
+// MODAL DOTS → RETRY LOGIC
+// ----------------------
+function startDotsToRetryTimer() {
+  dots.style.display = "inline-flex";
+  retryBtn.classList.remove("show");
+
+  if (dotsToRetryTimeout) clearTimeout(dotsToRetryTimeout);
+
+  dotsToRetryTimeout = setTimeout(() => {
+    dots.style.display = "none";
+    retryBtn.classList.add("show");
+  }, 5000);
+}
+
+// ----------------------
+// CAMERA INITIALIZATION
+// ----------------------
+async function initCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+    video.srcObject = stream;
+    await video.play();
+
+    // Hide modal and retry/dots
+    permissionOverlay.classList.add("hidden");
+    dots.style.display = "none";
+    retryBtn.classList.remove("show");
+
+    // Enable capture button
+    startBtn.disabled = false;
+
+    // Make sure preview overlay is hidden
+    hidePreviewOverlay();
+
+  } catch (err) {
+    console.error("Camera access denied:", err);
+
+    // Show modal with dots animation
+    permissionOverlay.classList.remove("hidden");
+    startDotsToRetryTimer();
+
+    startBtn.disabled = true;
+  }
+}
+
+// ----------------------
+// EVENT LISTENERS
+// ----------------------
+// Retry button in modal
+retryBtn?.addEventListener("click", initCamera);
+
+// Close modal manually
+overlayCloseBtn?.addEventListener("click", () => {
+  permissionOverlay.classList.add("hidden");
+  startBtn.disabled = true;
+
+  // Stop dots → retry timer
+  if (dotsToRetryTimeout) clearTimeout(dotsToRetryTimeout);
+
+  // Hide dots & retry
+  dots.style.display = "none";
+  retryBtn.classList.remove("show");
+
+  // Show preview overlay inside camera preview
+  showPreviewOverlay();
+});
+
+// Automatically request camera on page load
+initCamera();
+
 
   /* ---------------------- */
   /* PHOTOSTRIP CAPTURE */

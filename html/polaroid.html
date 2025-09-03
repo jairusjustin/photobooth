@@ -54,9 +54,15 @@
 <!-- Camera Permission Overlay -->
 <div id="camera-permission-overlay" class="camera-overlay">
   <div class="camera-modal">
-    <h2>Allow Camera Access</h2>
-    <p>To use the photobooth, please allow camera access.</p>
-    <button id="allow-camera-btn">Allow</button>
+    <button class="close-overlay" aria-label="Close overlay">&times;</button>
+    <h2>Accessing Camera</h2>
+    <p>Allow your camera to capture moments in style.</p>
+    <div class="camera-status">
+      <div class="camera-dots" id="camera-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <button class="retry-btn" id="retry-camera" title="Retry Camera Access"><i class="fa-solid fa-rotate"></i></button>
+    </div>
   </div>
 </div>
 
@@ -67,6 +73,7 @@
       <div class="preview-wrapper">
         <video id="polaroid-preview" autoplay muted playsinline hidden></video>
         <div id="countdown-overlay" class="countdown-overlay"></div>
+        <div id="preview-text-overlay" class="preview-text-overlay">Camera access required</div>
       </div>
       <div class="polaroid-caption">
         <button id="start" class="capture-button" aria-label="Capture photo"></button>

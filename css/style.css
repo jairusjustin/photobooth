@@ -649,49 +649,128 @@ main {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: 100;
+  background: rgba(0,0,0,0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .camera-modal {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 12px;
+  position: relative;
+  background: #fff;
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 360px;
   text-align: center;
-  max-width: 400px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
 }
 
-.camera-modal h2 {
-  margin-bottom: 0.5rem;
+.close-overlay {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
   font-size: 1.5rem;
+  font-weight: 600;
+  color: #222;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close-overlay:hover {
+  color: #e53935;
+}
+
+/* Dots animation */
+.camera-dots {
+  display: inline-flex;
+  gap: 4px;
+}
+.camera-dots span {
+  width: 6px;
+  height: 6px;
+  background: #222; /* dark color for contrast */  
+  border-radius: 50%;
+  animation: blink 1.2s infinite;
+}
+.camera-dots span:nth-child(2) { animation-delay: 0.2s; }
+.camera-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0; }
+  40% { opacity: 1; }
+}
+
+/* Dots animation */
+.camera-dots {
+  display: inline-flex;
+  gap: 4px;
+}
+.camera-dots span {
+  width: 6px;
+  height: 6px;
+  background: #222; /* dark color for contrast */
+  border-radius: 50%;
+  animation: blink 1.2s infinite;
+}
+.camera-dots span:nth-child(2) { animation-delay: 0.2s; }
+.camera-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0; }
+  40% { opacity: 1; }
+}
+
+/* Retry icon hidden by default */
+.retry-btn {
+  display: none;           /* hidden initially */
+  background: transparent; /* no background */
+  border: none;            /* no border */
+  padding: 0;              /* remove padding */
+  margin: 0;               /* remove margin */
+  font-size: 1rem;         /* size of icon */
+  color: #222;             /* match dots color */
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+/* Show retry when JS adds 'show' class */
+.retry-btn.show {
+  display: flex;
+  animation: rotateRetry 1.2s infinite;
+}
+
+/* Rotate animation for retry icon */
+@keyframes rotateRetry {
+  0%, 80%, 100% { transform: rotate(0deg); }
+  40% { transform: rotate(20deg); }
+}
+
+/* Center both dots and retry */
+.camera-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin-top: 1rem;
+}
+
+
+.camera-modal h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
 .camera-modal p {
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
-  color: #444;
+  font-size: 0.95rem;
+  color: #555;
 }
-
-.camera-modal button {
-  padding: 0.5rem 1.2rem;
-  background-color: #e53935;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.2s ease;
-}
-
-.camera-modal button:hover {
-  background-color: #b71c1c;
-}
-
 /* ---------------------- */
 /* VIDEO STYLES
 /* ---------------------- */
@@ -730,6 +809,30 @@ video::-webkit-media-controls-enclosure {
   transform: scaleX(-1); 
   border-radius: 8px;
 }
+
+.preview-text-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 1rem;
+  padding: 1rem;
+  border-radius: 16px;
+
+  pointer-events: none; 
+  opacity: 0; 
+  transition: opacity 0.3s ease;
+
+  box-sizing: border-box;
+}
+
 
 /* ---------------------- */
 /* POLAROID CONTAINER FOR CAPTURE
@@ -798,6 +901,24 @@ video::-webkit-media-controls-enclosure {
 
 .capture-button:active::before {
   border-color: #b71c1c;
+}
+
+.capture-button:disabled {
+  background-color: #555;  
+}
+
+.capture-button:disabled::before {
+  border-color: #555;      
+}
+
+.capture-button:disabled:hover,
+.capture-button:disabled:focus {
+  background-color: #555;  
+}
+
+.capture-button:disabled:hover::before,
+.capture-button:disabled:focus::before {
+  border-color: #555;      
 }
 
 /* ---------------------- */
@@ -900,11 +1021,9 @@ video::-webkit-media-controls-enclosure {
     transform: translate(-50%, -50%) scale(1);
     opacity: 1;
   }
-}
-
-/* ---------------------- */
-/* PHOTO MODAL
-/* ---------------------- */
+}/* ====================================================== */
+/* PHOTO MODAL BASE STYLES */
+/* ====================================================== */
 .photo-modal {
   position: fixed;
   top: 0;
@@ -919,34 +1038,6 @@ video::-webkit-media-controls-enclosure {
 }
 
 .photo-modal-content {
-  background: #fff;
-  padding: 1rem;
-  border-radius: 12px;
-  max-width: 90%;
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Image inside modal */
-.photo-modal-content img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 0;
-  border: none;
-}
-
-/* Hidden helper class */
-.hidden {
-  display: none;
-}
-
-/* ---------------------- */
-/* MODAL SPLIT LAYOUT
-/* ---------------------- */
-.photo-modal-content {
   display: flex;
   gap: 2rem;
   width: 700px;
@@ -957,7 +1048,14 @@ video::-webkit-media-controls-enclosure {
   box-shadow: 0 12px 30px rgba(0,0,0,0.25);
 }
 
-/* LEFT PANEL OF MODAL */
+/* Utility: Hidden helper */
+.hidden {
+  display: none;
+}
+
+/* ====================================================== */
+/* MODAL LEFT PANEL (Options / Buttons) */
+/* ====================================================== */
 .modal-left {
   flex: 1;
   display: flex;
@@ -965,7 +1063,6 @@ video::-webkit-media-controls-enclosure {
   justify-content: center; 
   align-items: center; 
   gap: 1rem;
-  padding: 2rem 1rem;
   background: #fff; 
 }
 
@@ -997,13 +1094,14 @@ video::-webkit-media-controls-enclosure {
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
-/* RIGHT PANEL OF MODAL: POLAROID PREVIEW */
+/* ====================================================== */
+/* MODAL RIGHT PANEL (Polaroid Preview) */
+/* ====================================================== */
 .modal-right {
   flex: 2;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-left: 1rem;
 }
 
 .polaroid-preview {
@@ -1020,6 +1118,7 @@ video::-webkit-media-controls-enclosure {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  position: relative;
 }
 
 .polaroid-preview img {
@@ -1028,6 +1127,7 @@ video::-webkit-media-controls-enclosure {
   object-fit: cover;
 }
 
+/* Caption / Logo under the polaroid */
 #photo-modal .polaroid-preview {
   position: relative; 
   overflow: visible; 
@@ -1049,6 +1149,54 @@ video::-webkit-media-controls-enclosure {
   width: auto;
   margin: 0 auto;
 }
+
+/* ====================================================== */
+/* RESPONSIVE (Mobile View) */
+/* ====================================================== */
+@media (max-width: 768px) {
+  .photo-modal-content {
+    flex-direction: column; 
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+
+  /* Reorder panels on mobile */
+  .modal-left {
+    order: 2; 
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .modal-right {
+    order: 1; 
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  /* Adjust polaroid scaling */
+  .polaroid-preview {
+    width: 320px;
+    height: 345px;
+    border-width: 14px 14px 70px 14px; 
+  }
+
+  .polaroid-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Adjust caption placement */
+  #photo-modal .polaroid-preview .polaroid-caption {
+    bottom: -20px; 
+  }
+}
+
+
 
 
 /* ---------------------- */
