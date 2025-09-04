@@ -86,23 +86,80 @@
   </div>
 
 <div id="photo-modal" class="photo-modal hidden">
+
   <div class="photo-modal-content">
+  
+    <!-- Top-right Close Button -->
+    <button class="close-overlay" id="close-btn">&times;</button>
+
+    <!-- LEFT: Customize & Actions -->
     <div class="modal-left">
-      <h3>Options</h3>
-      <button id="download-btn">Download</button>
-      <button id="retake-btn">Retake</button>
-      <button id="close-btn">Go Back</button>
-    </div>
-      <div class="modal-right">
-        <div class="polaroid-preview">
-          <img id="modal-image" alt="Captured Photo" />
-          <div class="polaroid-caption">
-            <img src="../assets/pb-logo-no-bg.png" alt="Logo" class="logo" />
-          </div>
+
+      <!-- Title -->
+      <div class="customize-title">Customize</div>
+
+      <!-- Frame Color Label -->
+      <div class="frame-label">Frame Color</div>
+
+      <!-- Color Picker Circles -->
+      <div class="color-picker-circles">
+
+        <!-- Row 1: Monochrome -->
+        <span class="color-circle" data-color="#ffffff" style="background:#ffffff;"></span>
+        <span class="color-circle" data-color="#f9f9f9" style="background:#f9f9f9;"></span>
+        <span class="color-circle" data-color="#e0e0e0" style="background:#e0e0e0;"></span>
+        <span class="color-circle" data-color="#bfbfbf" style="background:#bfbfbf;"></span>
+        <span class="color-circle" data-color="#000000" style="background:#000000;"></span>
+
+        <!-- Row 2: Pastel  -->
+        <span class="color-circle" data-color="#ffc0cb" style="background:#ffc0cb;"></span>
+        <span class="color-circle" data-color="#add8e6" style="background:#add8e6;"></span>
+        <span class="color-circle" data-color="#fffacd" style="background:#fffacd;"></span>
+        <span class="color-circle" data-color="#d0f0c0" style="background:#d0f0c0;"></span>
+        <span class="color-circle" data-color="#e0e0ff" style="background:#e0e0ff;"></span>
+
+        <!-- Row 3: Muted -->
+        <span class="color-circle" data-color="#d46a6a" style="background:#d46a6a;"></span>
+        <span class="color-circle" data-color="#6a8fd4" style="background:#6a8fd4;"></span>
+        <span class="color-circle" data-color="#d4c26a" style="background:#d4c26a;"></span>
+        <span class="color-circle" data-color="#6ad49a" style="background:#6ad49a;"></span>
+        <span class="color-circle" data-color="#a46ad4" style="background:#a46ad4;"></span>
+
+        <input type="color" id="color-picker" hidden>
+      </div>
+
+      <!-- Bottom Buttons: Download & Retake -->
+      <div class="bottom-actions">
+        <div class="action-group">
+          <button id="download-btn" class="icon-btn" title="Download">
+            <i class="fa-solid fa-download"></i>
+          </button>
+          <span class="label">Download</span>
+        </div>
+        <div class="action-group">
+          <button id="retake-btn" class="icon-btn" title="Retake">
+            <i class="fa-solid fa-camera-rotate"></i>
+          </button>
+          <span class="label">Retake</span>
         </div>
       </div>
+
+    </div>
+
+    <!-- RIGHT: Polaroid Preview -->
+    <div class="modal-right">
+      <div class="polaroid-preview" id="polaroid-frame">
+        <img id="modal-image" alt="Captured Photo">
+        <div class="polaroid-caption">
+          <img src="../assets/pb-logo-no-bg.png" alt="Logo" class="logo">
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
+
+
 
 </main>
 

@@ -1022,30 +1022,43 @@ video::-webkit-media-controls-enclosure {
     opacity: 1;
   }
 }/* ====================================================== */
+
+/* ====================================================== */
 /* PHOTO MODAL BASE STYLES */
 /* ====================================================== */
 .photo-modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
+  inset: 0;
+  background: rgba(0,0,0,0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(6px);
 }
 
 .photo-modal-content {
   display: flex;
+  flex-direction: row;
   gap: 2rem;
-  width: 700px;
-  max-width: 90%;
+  width: 90vw;
+  max-width: 600px;
+  max-height: 90vh;
   padding: 2rem;
-  border-radius: 16px;
+  border-radius: 20px;
   background: #fff;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* For enter/exit animation */
+.photo-modal.show .photo-modal-content {
+  transform: scale(1);
+  opacity: 1;
+}
+.photo-modal.hidden .photo-modal-content {
+  transform: scale(0.95);
+  opacity: 0;
 }
 
 /* Utility: Hidden helper */
@@ -1053,55 +1066,141 @@ video::-webkit-media-controls-enclosure {
   display: none;
 }
 
+
 /* ====================================================== */
-/* MODAL LEFT PANEL (Options / Buttons) */
+/* MODAL LEFT PANEL (Customize & Actions) */
 /* ====================================================== */
 .modal-left {
-  flex: 1;
+  flex: 1; /* take proportional space on left */
   display: flex;
   flex-direction: column;
-  justify-content: center; 
-  align-items: center; 
-  gap: 1rem;
-  background: #fff; 
+  align-items: center; /* center content horizontally */
+  justify-content: flex-start; /* start from top */
+  gap: 1.5rem;
+  padding: 2rem 0rem; /* add top and bottom padding */
+  overflow-y:   auto; /* scroll if content overflows vertically */
 }
 
-.modal-left h3 {
+/* Title */
+.customize-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #222;
-  margin-bottom: 1rem;
+  color: #111;
   text-align: center;
+  width: 100%;
+  margin-top: 0.5rem; /* small extra spacing from top padding */
 }
 
-.modal-left button {
+/* Frame color label */
+.frame-label {
+  font-size: 0.9rem;
+  color: #555;
+  text-align: center;
   width: 100%;
-  max-width: 180px; 
-  padding: 0.8rem 1rem;
+  margin-bottom: 0.5rem; /* spacing before color circles */
+}
+/* Color circles container */
+.color-picker-circles {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  width: 100%;
+  margin: 0.5rem 0 1rem 0;
+}
+
+/* Individual color circle */
+.color-circle {
+  flex: 1 0 18%; /* try to take 18% of the row → fits 5 per row with gaps */
+  max-width: 28px; /* keep the original size */
+  aspect-ratio: 1 / 1; /* ensure perfect circle */
+  border-radius: 50%;
+  border: 1px solid #aaa;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.color-circle:hover {
+  transform: scale(1.2);
+  border-color: #111;
+}
+
+.color-circle.selected {
+  border-width: 3px;
+  border-color: #e53935;
+}
+
+/* Bottom actions */
+.bottom-actions {
+  display: flex;
+  justify-content: center; /* center horizontally */
+  gap: 1.5rem;
+  margin-top: auto; /* stick to bottom of left panel */
+  margin-bottom: 1rem; /* spacing from bottom padding */
+  width: 100%;
+}
+
+/* Action group (icon + label) */
+.action-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+/* Icon buttons */
+.icon-btn {
+  width: 52px;
+  height: 52px;
   border: none;
-  border-radius: 999px;
+  border-radius: 50%;
   background: #111;
   color: #fff;
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 
-.modal-left button:hover {
+.icon-btn:hover {
   background: #e53935;
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+/* Label hover underline */
+.label {
+  font-size: 0.8rem;
+  color: #111;
+  text-align: center;
+  padding-bottom: 2px;
+  transition: border-bottom 0.2s ease;
+}
+
+.action-group:hover .label,
+.label:hover {
+  border-bottom: 1px solid #121212;
+}
+
+/* Optional: adjust for very small screens */
+@media (max-width: 400px) {
+  .color-circle {
+    flex: 1 0 20%; /* slightly smaller so 5 still fits */
+    max-width: 24px;
+  }
 }
 
 /* ====================================================== */
 /* MODAL RIGHT PANEL (Polaroid Preview) */
 /* ====================================================== */
 .modal-right {
-  flex: 2;
+  flex: 2; /* take larger proportion */
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* center polaroid horizontally */
+  align-items: center;     /* center polaroid vertically */
 }
 
 .polaroid-preview {
@@ -1120,6 +1219,7 @@ video::-webkit-media-controls-enclosure {
   overflow: hidden;
   position: relative;
 }
+
 
 .polaroid-preview img {
   width: 100%;
@@ -1145,9 +1245,10 @@ video::-webkit-media-controls-enclosure {
 
 #photo-modal .polaroid-preview .polaroid-caption .logo {
   display: block;
-  height: 30px; 
+  height: 28px; 
   width: auto;
   margin: 0 auto;
+  opacity: 0.8;
 }
 
 /* ====================================================== */
@@ -1156,6 +1257,7 @@ video::-webkit-media-controls-enclosure {
 @media (max-width: 768px) {
   .photo-modal-content {
     flex-direction: column; 
+    align-items: center;
     gap: 1.5rem;
     padding: 1rem;
   }
@@ -1167,21 +1269,22 @@ video::-webkit-media-controls-enclosure {
     flex-direction: column;
     align-items: center;
     gap: 0.8rem;
-    margin-bottom: 1rem;
+    padding: 0 40px;
   }
 
   .modal-right {
     order: 1; 
     width: 100%;
     justify-content: center;
-    margin-top: 1rem;
+    margin-top: 1rem; /* Added top margin */
   }
 
   /* Adjust polaroid scaling */
   .polaroid-preview {
-    width: 320px;
-    height: 345px;
-    border-width: 14px 14px 70px 14px; 
+    width: 260px; /* slightly smaller than desktop */
+    height: 280px; 
+    border-width: 12px 12px 60px 12px; 
+    margin-top: 1rem; /* add extra spacing above */
   }
 
   .polaroid-preview img {
@@ -1194,7 +1297,28 @@ video::-webkit-media-controls-enclosure {
   #photo-modal .polaroid-preview .polaroid-caption {
     bottom: -20px; 
   }
+
+  #photo-modal .polaroid-preview .polaroid-caption .logo {
+    height: 22px; /* slightly smaller for mobile */
+  }
+
+   .bottom-actions {
+    margin-bottom: 0.8rem; 
+  }
+
+  /* Icon buttons smaller */
+  .icon-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1rem;
+  }
+
+  /* Label slightly smaller */
+  .label {
+    font-size: 0.75rem;
+  }
 }
+
 
 
 

@@ -2,116 +2,129 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ---------------------- */
   /* ELEMENTS */
   /* ---------------------- */
-const video = document.getElementById("polaroid-preview");
-const permissionOverlay = document.getElementById("camera-permission-overlay");
-const dots = document.getElementById("camera-dots");
-const retryBtn = document.getElementById("retry-camera")
-const overlayCloseBtn = permissionOverlay.querySelector(".close-overlay");
-const previewTextOverlay = document.getElementById("preview-text-overlay");
+  const video = document.getElementById("polaroid-preview");
+  const permissionOverlay = document.getElementById("camera-permission-overlay");
+  const dots = document.getElementById("camera-dots");
+  const retryBtn = document.getElementById("retry-camera");
+  const overlayCloseBtn = permissionOverlay.querySelector(".close-overlay");
+  const previewTextOverlay = document.getElementById("preview-text-overlay");
 
+  const startBtn = document.getElementById("start");
+  const closeBtn = document.getElementById("close-btn");
+  const retakeBtn = document.getElementById("retake-btn");
+  const downloadBtn = document.getElementById("download-btn");
+  const captureContainer = document.getElementById("capture-polaroid");
+  const photoModal = document.getElementById("photo-modal");
+  const modalImage = document.getElementById("modal-image");
 
-const startBtn = document.getElementById("start");
-const closeBtn = document.getElementById("close-btn");
-const retakeBtn = document.getElementById("retake-btn");
-const downloadBtn = document.getElementById("download-btn");
-const captureContainer = document.getElementById("capture-polaroid");
-const photoModal = document.getElementById("photo-modal");
-const modalImage = document.getElementById("modal-image");
+  // NEW: Frame customization
+  const previewFrame = document.getElementById("polaroid-frame");
+  const colorCircles = document.querySelectorAll(".color-circle");
+  const colorPicker = document.getElementById("color-picker");
+  const logoImg = previewFrame.querySelector(".polaroid-caption img");
+  const defaultBorderColor = getComputedStyle(previewFrame).borderColor;
 
-let dotsToRetryTimeout;
+  let dotsToRetryTimeout;
 
-// ----------------------
-// PREVIEW OVERLAY
-// ----------------------
-function showPreviewOverlay() {
-  previewTextOverlay.style.opacity = "1";
-}
+  /* ---------------------- */
+  /* HELPER: Determine if a color is dark */
+  /* ---------------------- */
+function isColorDark(color) {
+  let r, g, b;
 
-function hidePreviewOverlay() {
-  previewTextOverlay.style.opacity = "0";
-}
-
-// ----------------------
-// MODAL DOTS → RETRY LOGIC
-// ----------------------
-function startDotsToRetryTimer() {
-  dots.style.display = "inline-flex";
-  retryBtn.classList.remove("show");
-
-  if (dotsToRetryTimeout) clearTimeout(dotsToRetryTimeout);
-
-  dotsToRetryTimeout = setTimeout(() => {
-    dots.style.display = "none";
-    retryBtn.classList.add("show");
-  }, 5000);
-}
-
-// ----------------------
-// CAMERA INITIALIZATION
-// ----------------------
-async function initCamera() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
-    video.srcObject = stream;
-    await video.play();
-
-    // Hide modal and retry/dots
-    permissionOverlay.classList.add("hidden");
-    dots.style.display = "none";
-    retryBtn.classList.remove("show");
-
-    // Enable capture button
-    startBtn.disabled = false;
-
-    // Make sure preview overlay is hidden
-    hidePreviewOverlay();
-
-  } catch (err) {
-    console.error("Camera access denied:", err);
-
-    // Show modal with dots animation
-    permissionOverlay.classList.remove("hidden");
-    startDotsToRetryTimer();
-
-    startBtn.disabled = true;
+  // Handle hex colors
+  if (color.startsWith("#")) {
+    if (color.length === 7) { // #RRGGBB
+      r = parseInt(color.slice(1, 3), 16);
+      g = parseInt(color.slice(3, 5), 16);
+      b = parseInt(color.slice(5, 7), 16);
+    } else if (color.length === 4) { // #RGB
+      r = parseInt(color[1] + color[1], 16);
+      g = parseInt(color[2] + color[2], 16);
+      b = parseInt(color[3] + color[3], 16);
+    }
+  } else if (color.startsWith("rgb")) {
+    // Handle rgb() or rgba()
+    const rgb = color.match(/\d+/g).map(Number);
+    [r, g, b] = rgb;
+  } else {
+    // Fallback: assume black if unknown
+    r = g = b = 0;
   }
+
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness < 128;
 }
 
-// ----------------------
-// EVENT LISTENERS
-// ----------------------
-// Retry button in modal
-retryBtn?.addEventListener("click", initCamera);
 
-// Close modal manually
-overlayCloseBtn?.addEventListener("click", () => {
-  permissionOverlay.classList.add("hidden");
-  startBtn.disabled = true;
+  function updateLogoColor(frameColor) {
+    logoImg.src = isColorDark(frameColor)
+      ? "../assets/pb-logo-no-bg-w.png"
+      : "../assets/pb-logo-no-bg.png";
+  }
 
-  // Stop dots → retry timer
-  if (dotsToRetryTimeout) clearTimeout(dotsToRetryTimeout);
-
-  // Hide dots & retry
-  dots.style.display = "none";
-  retryBtn.classList.remove("show");
-
-  // Show preview overlay inside camera preview
-  showPreviewOverlay();
+  /* ---------------------- */
+  /* FRAME CUSTOMIZATION */
+  /* ---------------------- */
+colorCircles.forEach(circle => {
+  circle.addEventListener("click", () => {
+    const color = circle.dataset.color;
+    previewFrame.style.borderColor = color; 
+    colorPicker.value = color; 
+    updateLogoColor(color); 
+  });
 });
 
-// Automatically request camera on page load
-initCamera();
-
-
   /* ---------------------- */
-  /* POLAROID CAPTURE */
+  /* CAMERA & MODAL LOGIC */
   /* ---------------------- */
+  function showPreviewOverlay() { previewTextOverlay.style.opacity = "1"; }
+  function hidePreviewOverlay() { previewTextOverlay.style.opacity = "0"; }
+
+  function startDotsToRetryTimer() {
+    dots.style.display = "inline-flex";
+    retryBtn.classList.remove("show");
+    if (dotsToRetryTimeout) clearTimeout(dotsToRetryTimeout);
+    dotsToRetryTimeout = setTimeout(() => {
+      dots.style.display = "none";
+      retryBtn.classList.add("show");
+    }, 5000);
+  }
+
+  async function initCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+      video.srcObject = stream;
+      await video.play();
+      permissionOverlay.classList.add("hidden");
+      dots.style.display = "none";
+      retryBtn.classList.remove("show");
+      startBtn.disabled = false;
+      hidePreviewOverlay();
+    } catch (err) {
+      console.error("Camera access denied:", err);
+      permissionOverlay.classList.remove("hidden");
+      startDotsToRetryTimer();
+      startBtn.disabled = true;
+    }
+  }
+
+  retryBtn?.addEventListener("click", initCamera);
+  overlayCloseBtn?.addEventListener("click", () => {
+    permissionOverlay.classList.add("hidden");
+    startBtn.disabled = true;
+    if (dotsToRetryTimeout) clearTimeout(dotsToRetryTimeout);
+    dots.style.display = "none";
+    retryBtn.classList.remove("show");
+    showPreviewOverlay();
+  });
+
+  initCamera();
+
   startBtn?.addEventListener("click", async () => {
-    // Get current countdown delay
     const delay = window.getCurrentDelay?.() || 0;
     await window.showCountdown?.(delay);
 
-    // Capture video frame
     const canvasPhoto = document.createElement("canvas");
     canvasPhoto.width = video.videoWidth;
     canvasPhoto.height = video.videoHeight;
@@ -120,23 +133,21 @@ initCamera();
     ctxPhoto.scale(-1, 1);
     ctxPhoto.drawImage(video, 0, 0, canvasPhoto.width, canvasPhoto.height);
 
-    // Show captured photo in modal
     modalImage.src = canvasPhoto.toDataURL("image/png");
     photoModal.classList.add("show");
     photoModal.classList.remove("hidden");
-
   });
-
 
   /* ---------------------- */
   /* POLAROID DOWNLOAD */
   /* ---------------------- */
   downloadBtn?.addEventListener("click", () => {
     if (!modalImage.src) return;
-    downloadPolaroid(modalImage);
+    const frameColor = previewFrame.style.borderColor || defaultBorderColor;
+    downloadPolaroid(modalImage, frameColor);
   });
 
-  function downloadPolaroid(imgElement) {
+  function downloadPolaroid(imgElement, frameColor = "#fff") {
     const scale = 2;
     const rect = captureContainer.getBoundingClientRect();
     const canvasWidth = rect.width * scale;
@@ -148,8 +159,6 @@ initCamera();
     const ctx = canvas.getContext("2d");
 
     const radius = 20 * scale;
-
-    // Clip to rounded rectangle
     ctx.beginPath();
     ctx.moveTo(radius, 0);
     ctx.lineTo(canvasWidth - radius, 0);
@@ -163,10 +172,11 @@ initCamera();
     ctx.closePath();
     ctx.clip();
 
-    // Draw background gradient
-    ctx.fillStyle = "#fff";
+    // Frame background color
+    ctx.fillStyle = frameColor;
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
+    // Polaroid gradient
     const gradient = ctx.createLinearGradient(0, 0, canvasWidth, canvasHeight);
     gradient.addColorStop(0, "#f9f9f9");
     gradient.addColorStop(1, "#eaeaea");
@@ -177,7 +187,6 @@ initCamera();
     const bottomExtra = 84 * scale;
     ctx.fillRect(paddingX, paddingY, canvasWidth - paddingX * 2, canvasHeight - bottomExtra);
 
-    // Draw captured photo
     const img = new Image();
     img.src = imgElement.src;
     img.onload = () => {
@@ -199,18 +208,19 @@ initCamera();
 
       ctx.drawImage(img, sx, sy, sWidth, sHeight, paddingX, paddingY, previewWidth, previewHeight);
 
-      // Draw logo
-      const logoImg = new Image();
-      logoImg.src = "../assets/pb-logo.png";
-      logoImg.onload = () => {
+      // Logo
+      const logoImgCanvas = new Image();
+      logoImgCanvas.src = isColorDark(frameColor)
+        ? "../assets/pb-logo-no-bg-w.png"
+        : "../assets/pb-logo-no-bg.png";
+      logoImgCanvas.onload = () => {
         const logoHeight = 30 * scale;
-        const logoRatio = logoImg.width / logoImg.height;
+        const logoRatio = logoImgCanvas.width / logoImgCanvas.height;
         const logoWidth = logoHeight * logoRatio;
         const x = (canvasWidth - logoWidth) / 2;
         const y = canvasHeight - 50 * scale;
-        ctx.drawImage(logoImg, x, y, logoWidth, logoHeight);
+        ctx.drawImage(logoImgCanvas, x, y, logoWidth, logoHeight);
 
-        // Trigger download
         const link = document.createElement("a");
         link.href = canvas.toDataURL("image/png");
         link.download = getPolaroidFilename();
@@ -222,31 +232,34 @@ initCamera();
   function getPolaroidFilename() {
     const now = new Date();
     const pad = (n) => n.toString().padStart(2, "0");
-    const yy = now.getFullYear().toString().slice(-2);
-    const mm = pad(now.getMonth() + 1);
-    const dd = pad(now.getDate());
-    const hh = pad(now.getHours());
-    const min = pad(now.getMinutes());
-    const ss = pad(now.getSeconds());
-    return `polaroid-${yy}${mm}${dd}-${hh}${min}${ss}.png`;
+    return `polaroid-${now.getFullYear().toString().slice(-2)}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}.png`;
   }
-
 
   /* ---------------------- */
   /* MODAL CONTROLS */
   /* ---------------------- */
-  closeBtn?.addEventListener("click", () => window.location.href = "index.html");
+  closeBtn?.addEventListener("click", () => {
+    photoModal.classList.remove("show");
+    photoModal.classList.add("hidden");
+    modalImage.src = "";
+    previewFrame.style.borderColor = defaultBorderColor;
+    updateLogoColor(defaultBorderColor);
+  });
 
   retakeBtn?.addEventListener("click", () => {
     photoModal.classList.remove("show");
     photoModal.classList.add("hidden");
     modalImage.src = "";
+    previewFrame.style.borderColor = defaultBorderColor;
+    updateLogoColor(defaultBorderColor);
   });
 
   photoModal?.addEventListener("click", (e) => {
     if (e.target === photoModal) {
       photoModal.classList.remove("show");
       photoModal.classList.add("hidden");
+      previewFrame.style.borderColor = defaultBorderColor;
+      updateLogoColor(defaultBorderColor);
     }
   });
 });
