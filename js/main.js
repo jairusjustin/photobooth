@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-  /* NAVIGATION + MOBILE MENU (unchanged) */
+  /* ---------------------- */
+  /* NAVIGATION + MOBILE MENU */
+  /* ---------------------- */
   const hamburger = document.querySelector('.hamburger');
   const mobileMenu = document.createElement('div');
   mobileMenu.classList.add('mobile-menu');
@@ -24,7 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
     mobileMenu.classList.toggle('open');
   });
 
-  /* START MODAL + STYLE SELECTION (navigate only) */
+  /* ---------------------- */
+  /* START MODAL + STYLE SELECTION */
+  /* ---------------------- */
   const openModalBtn = document.getElementById("open-modal-btn");
   const modal = document.getElementById("startModal");
   const closeModalBtn = document.getElementById("close-modal-btn");
@@ -42,7 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "photostrip.html";
   });
 
-  /* TIMER + COUNTDOWN (if you use it on index, keep; otherwise you can remove) */
+  /* ---------------------- */
+  /* TIMER + COUNTDOWN LOGIC */
+  /* ---------------------- */
   const timerBtn = document.getElementById("timer-btn");
   const timerText = timerBtn?.querySelector(".timer-text");
   const countdownOverlay = document.getElementById("countdown-overlay");
@@ -50,16 +56,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const timerValues = [0, 3, 5, 10];
   let currentTimerIndex = 0;
 
+  // Timer button click: cycle through timer values
   timerBtn?.addEventListener("click", () => {
     currentTimerIndex = (currentTimerIndex + 1) % timerValues.length;
     if (timerText) timerText.textContent = `${timerValues[currentTimerIndex]}s`;
+    if (timerBtn) timerBtn.title = `Timer: ${timerValues[currentTimerIndex]} seconds`;
   });
 
+  // Show countdown overlay
   function showCountdown(seconds) {
     return new Promise((resolve) => {
       if (!countdownOverlay) return resolve();
 
       let count = seconds;
+
       const tick = () => {
         if (count > 0) {
           countdownOverlay.textContent = count;
@@ -78,7 +88,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Reset timer to 0 and hide overlay
+  function resetTimer() {
+    currentTimerIndex = 0;
+    if (timerText) timerText.textContent = "0s";
+    if (timerBtn) timerBtn.title = "Timer: 0 seconds";
+    if (countdownOverlay) {
+      countdownOverlay.textContent = "";
+      countdownOverlay.classList.remove("show");
+    }
+  }
+
+  /* ---------------------- */
+  /* EXPOSE FUNCTIONS GLOBALLY */
+  /* ---------------------- */
   window.showCountdown = showCountdown;
   window.getCurrentDelay = () => timerValues[currentTimerIndex];
-
+  window.resetTimer = resetTimer;
 });

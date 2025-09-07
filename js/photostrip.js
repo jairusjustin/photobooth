@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const video = document.getElementById("polaroid-preview");
   const permissionOverlay = document.getElementById("camera-permission-overlay");
   const dots = document.getElementById("camera-dots");
-  const retryBtn = document.getElementById("retry-camera")
+  const retryBtn = document.getElementById("retry-camera");
   const overlayCloseBtn = permissionOverlay.querySelector(".close-overlay");
   const previewTextOverlay = document.getElementById("preview-text-overlay");
   const startBtn = document.getElementById("start");
@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("slot-2"),
     document.getElementById("slot-3")
   ];
+
   const modalSlots = [
     document.getElementById("modal-slot-1"),
     document.getElementById("modal-slot-2"),
@@ -27,162 +28,211 @@ document.addEventListener("DOMContentLoaded", () => {
   const photoModal = document.getElementById("photo-modal");
   let currentSlot = 0;
 
-let dotsToRetryTimeout;
+  // Photostrip customization
+  const previewFrame = document.getElementById("photostrip-preview");
+  const colorCircles = document.querySelectorAll(".color-circle");
+  const colorPicker = document.getElementById("color-picker");
+  const logoImg = document.querySelector(".photostrip-caption .logo");
+  const defaultBorderColor = getComputedStyle(previewFrame).borderColor;
 
-// ----------------------
-// PREVIEW OVERLAY
-// ----------------------
-function showPreviewOverlay() {
-  previewTextOverlay.style.opacity = "1";
-}
+  let dotsToRetryTimeout;
 
-function hidePreviewOverlay() {
-  previewTextOverlay.style.opacity = "0";
-}
+  /* ---------------------- */
+  /* HELPER FUNCTIONS */
+  /* ---------------------- */
+  function isColorDark(color) {
+    let r, g, b;
 
-// ----------------------
-// MODAL DOTS → RETRY LOGIC
-// ----------------------
-function startDotsToRetryTimer() {
-  dots.style.display = "inline-flex";
-  retryBtn.classList.remove("show");
+    if (color.startsWith("#")) {
+      if (color.length === 7) {
+        r = parseInt(color.slice(1, 3), 16);
+        g = parseInt(color.slice(3, 5), 16);
+        b = parseInt(color.slice(5, 7), 16);
+      } else if (color.length === 4) {
+        r = parseInt(color[1] + color[1], 16);
+        g = parseInt(color[2] + color[2], 16);
+        b = parseInt(color[3] + color[3], 16);
+      }
+    } else if (color.startsWith("rgb")) {
+      const rgb = color.match(/\d+/g).map(Number);
+      [r, g, b] = rgb;
+    } else {
+      r = g = b = 0;
+    }
 
-  if (dotsToRetryTimeout) clearTimeout(dotsToRetryTimeout);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness < 128;
+  }
 
-  dotsToRetryTimeout = setTimeout(() => {
-    dots.style.display = "none";
-    retryBtn.classList.add("show");
-  }, 5000);
-}
+  function updateLogoColor(frameColor) {
+    if (!logoImg) return;
+    logoImg.src = isColorDark(frameColor)
+      ? "../assets/pb-logo-no-bg-w.png"
+      : "../assets/pb-logo-no-bg.png";
+  }
 
-// ----------------------
-// CAMERA INITIALIZATION
-// ----------------------
-async function initCamera() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
-    video.srcObject = stream;
-    await video.play();
+  function showPreviewOverlay() {
+    previewTextOverlay.style.opacity = "1";
+  }
 
-    // Hide modal and retry/dots
-    permissionOverlay.classList.add("hidden");
-    dots.style.display = "none";
+  function hidePreviewOverlay() {
+    previewTextOverlay.style.opacity = "0";
+  }
+
+  function startDotsToRetryTimer() {
+    dots.style.display = "inline-flex";
     retryBtn.classList.remove("show");
 
-    // Enable capture button
-    startBtn.disabled = false;
+    if (dotsToRetryTimeout) clearTimeout(dotsToRetryTimeout);
 
-    // Make sure preview overlay is hidden
-    hidePreviewOverlay();
-
-  } catch (err) {
-    console.error("Camera access denied:", err);
-
-    // Show modal with dots animation
-    permissionOverlay.classList.remove("hidden");
-    startDotsToRetryTimer();
-
-    startBtn.disabled = true;
+    dotsToRetryTimeout = setTimeout(() => {
+      dots.style.display = "none";
+      retryBtn.classList.add("show");
+    }, 5000);
   }
-}
 
-// ----------------------
-// EVENT LISTENERS
-// ----------------------
-// Retry button in modal
-retryBtn?.addEventListener("click", initCamera);
-
-// Close modal manually
-overlayCloseBtn?.addEventListener("click", () => {
-  permissionOverlay.classList.add("hidden");
-  startBtn.disabled = true;
-
-  // Stop dots → retry timer
-  if (dotsToRetryTimeout) clearTimeout(dotsToRetryTimeout);
-
-  // Hide dots & retry
-  dots.style.display = "none";
-  retryBtn.classList.remove("show");
-
-  // Show preview overlay inside camera preview
-  showPreviewOverlay();
-});
-
-// Automatically request camera on page load
-initCamera();
-
+  function getPhotostripFilename() {
+    const now = new Date();
+    const pad = (n) => n.toString().padStart(2, "0");
+    const yy = now.getFullYear().toString().slice(-2);
+    const mm = pad(now.getMonth() + 1);
+    const dd = pad(now.getDate());
+    const hh = pad(now.getHours());
+    const min = pad(now.getMinutes());
+    const ss = pad(now.getSeconds());
+    return `photostrip-${yy}${mm}${dd}-${hh}${min}${ss}.png`;
+  }
 
   /* ---------------------- */
-  /* PHOTOSTRIP CAPTURE */
+  /* CAMERA INITIALIZATION */
   /* ---------------------- */
-  startBtn.addEventListener("click", async () => {
-    if (currentSlot >= slots.length) return;
+  async function initCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+      video.srcObject = stream;
+      await video.play();
 
-    // Get current countdown delay
-    const delay = window.getCurrentDelay?.() || 0;
-    await window.showCountdown?.(delay);
-
-    // Capture video frame to canvas
-    const canvas = document.createElement("canvas");
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext("2d");
-
-    // Mirror the image
-    ctx.translate(canvas.width, 0);
-    ctx.scale(-1, 1);
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    const imgData = canvas.toDataURL("image/png");
-
-    // Show preview in current slot
-    const img = new Image();
-    img.src = imgData;
-    img.style.width = "100%";
-    img.style.height = "100%";
-    img.style.objectFit = "cover";
-    img.style.objectPosition = "center";
-
-    slots[currentSlot].innerHTML = "";
-    slots[currentSlot].appendChild(img);
-
-    // Save captured data for modal
-    slots[currentSlot].dataset.imgData = imgData;
-    currentSlot++;
-
-    // If all slots filled, show modal
-    if (currentSlot === slots.length) {
-      setTimeout(() => {
-        photoModal.classList.remove("hidden");
-        photoModal.classList.add("show");
-
-        slots.forEach((slot, index) => {
-          const data = slot.dataset.imgData;
-          if (!data) return;
-
-          const modalImg = new Image();
-          modalImg.src = data;
-          modalImg.style.width = "100%";
-          modalImg.style.height = "100%";
-          modalImg.style.objectFit = "cover";
-          modalImg.style.objectPosition = "center";
-
-          const modalSlot = document.getElementById(`modal-slot-${index + 1}`);
-          modalSlot.innerHTML = "";
-          modalSlot.appendChild(modalImg);
-        });
-      }, 500);
+      permissionOverlay.classList.add("hidden");
+      dots.style.display = "none";
+      retryBtn.classList.remove("show");
+      startBtn.disabled = false;
+      hidePreviewOverlay();
+    } catch (err) {
+      console.error("Camera access denied:", err);
+      permissionOverlay.classList.remove("hidden");
+      startDotsToRetryTimer();
+      startBtn.disabled = true;
     }
-    // --- Fix: remove button focus so it stops showing red ---
-    startBtn.blur();
+  }
+
+  /* ---------------------- */
+  /* FRAME CUSTOMIZATION */
+  /* ---------------------- */
+  colorCircles.forEach(circle => {
+    circle.addEventListener("click", () => {
+      const color = circle.dataset.color;
+
+      // Main preview
+      previewFrame.style.borderColor = color; 
+      previewFrame.style.backgroundColor = color;
+      updateLogoColor(color);
+
+      // Modal preview
+      const modalPhotostrip = document.getElementById("photo-modal")?.querySelector("#photostrip-preview");
+      if (modalPhotostrip) {
+        modalPhotostrip.style.borderColor = color;
+        modalPhotostrip.style.backgroundColor = color;
+        const modalLogo = modalPhotostrip.querySelector(".photostrip-caption .logo");
+        if (modalLogo) {
+          modalLogo.src = isColorDark(color)
+            ? "../assets/pb-logo-no-bg-w.png"
+            : "../assets/pb-logo-no-bg.png";
+        }
+      }
+
+      // Sync color picker
+      colorPicker.value = color; 
+    });
   });
 
   /* ---------------------- */
-  /* PHOTOSTRIP DOWNLOAD */
+  /* EVENT LISTENERS */
   /* ---------------------- */
+  retryBtn?.addEventListener("click", initCamera);
+  overlayCloseBtn?.addEventListener("click", () => {
+    permissionOverlay.classList.add("hidden");
+    startBtn.disabled = true;
+    if (dotsToRetryTimeout) clearTimeout(dotsToRetryTimeout);
+    dots.style.display = "none";
+    retryBtn.classList.remove("show");
+    showPreviewOverlay();
+  });
+
+let isCapturing = false;
+
+startBtn.addEventListener("click", async () => {
+  if (currentSlot >= slots.length) return;
+  if (isCapturing) return; // Ignore clicks while capturing
+
+  isCapturing = true; // Block further clicks
+
+  const delay = window.getCurrentDelay?.() || 0;
+  await window.showCountdown?.(delay); // Wait countdown
+
+  // --- Capture logic ---
+  const canvas = document.createElement("canvas");
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx = canvas.getContext("2d");
+
+  ctx.translate(canvas.width, 0);
+  ctx.scale(-1, 1);
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  const imgData = canvas.toDataURL("image/png");
+  const img = new Image();
+  img.src = imgData;
+  img.style.width = "100%";
+  img.style.height = "100%";
+  img.style.objectFit = "cover";
+  img.style.objectPosition = "center";
+
+  slots[currentSlot].innerHTML = "";
+  slots[currentSlot].appendChild(img);
+  slots[currentSlot].dataset.imgData = imgData;
+  currentSlot++;
+
+  if (currentSlot === slots.length) {
+    setTimeout(() => {
+      photoModal.classList.remove("hidden");
+      photoModal.classList.add("show");
+      slots.forEach((slot, index) => {
+        const data = slot.dataset.imgData;
+        if (!data) return;
+        const modalImg = new Image();
+        modalImg.src = data;
+        modalImg.style.width = "100%";
+        modalImg.style.height = "100%";
+        modalImg.style.objectFit = "cover";
+        modalImg.style.objectPosition = "center";
+        modalSlots[index].innerHTML = "";
+        modalSlots[index].appendChild(modalImg);
+      });
+    }, 500);
+  }
+
+  startBtn.blur();
+
+  isCapturing = false; // Allow clicks again after capture
+});
+
   downloadBtn?.addEventListener("click", () => {
     const photostrip = document.getElementById("photostrip-preview");
     if (!photostrip) return;
+
+    // Use current colors for border and background
+    const frameColor = previewFrame.style.borderColor || defaultBorderColor;
+    const bgColor = previewFrame.style.backgroundColor || "#fff";
 
     // Scale and dimension settings
     const scale = 4.2;
@@ -202,8 +252,8 @@ initCamera();
     canvas.height = canvasHeight;
     const ctx = canvas.getContext("2d");
 
-    // Draw rounded white background
-    ctx.fillStyle = "#fff";
+    // Draw background (respect color)
+    ctx.fillStyle = bgColor;
     ctx.beginPath();
     ctx.moveTo(radius, 0);
     ctx.lineTo(canvasWidth - radius, 0);
@@ -258,8 +308,8 @@ initCamera();
     });
     ctx.restore();
 
-    // Draw border
-    ctx.strokeStyle = "#fff";
+    // Draw border (use frameColor)
+    ctx.strokeStyle = frameColor;
     ctx.lineWidth = borderSides;
     ctx.beginPath();
     ctx.moveTo(radius, borderTop / 2);
@@ -274,11 +324,13 @@ initCamera();
     ctx.closePath();
     ctx.stroke();
 
-    // Draw logo
+    // Draw logo with automatic light/dark switch
     const logo = photostrip.querySelector(".photostrip-caption .logo");
     if (logo) {
       const logoImg = new Image();
-      logoImg.src = logo.src;
+      logoImg.src = isColorDark(frameColor)
+        ? "../assets/pb-logo-no-bg-w.png"
+        : "../assets/pb-logo-no-bg.png";
       logoImg.onload = () => {
         const logoHeight = 15 * scale;
         const logoRatio = logoImg.width / logoImg.height;
@@ -296,35 +348,64 @@ initCamera();
     }
   });
 
-  function getPhotostripFilename() {
-    const now = new Date();
-    const pad = (n) => n.toString().padStart(2, "0");
-    const yy = now.getFullYear().toString().slice(-2);
-    const mm = pad(now.getMonth() + 1);
-    const dd = pad(now.getDate());
-    const hh = pad(now.getHours());
-    const min = pad(now.getMinutes());
-    const ss = pad(now.getSeconds());
-    return `photostrip-${yy}${mm}${dd}-${hh}${min}${ss}.png`;
-  }
-
   /* ---------------------- */
   /* MODAL CONTROLS */
   /* ---------------------- */
-  closeBtn?.addEventListener("click", () => window.location.href = "index.html");
+  function resetModal() {
+    slots.forEach(slot => slot.innerHTML = "");
+    modalSlots.forEach(slot => slot.innerHTML = "");
+    currentSlot = 0;
+
+    window.resetTimer?.();
+
+    previewFrame.style.borderColor = defaultBorderColor;
+    previewFrame.style.backgroundColor = "#fff";
+    updateLogoColor(defaultBorderColor);
+
+    const modalPhotostrip = document.getElementById("photo-modal")?.querySelector("#photostrip-preview");
+    if (modalPhotostrip) {
+      modalPhotostrip.style.borderColor = defaultBorderColor;
+      modalPhotostrip.style.backgroundColor = "#fff";
+      const modalLogo = modalPhotostrip.querySelector(".photostrip-caption .logo");
+      if (modalLogo) {
+        modalLogo.src = isColorDark(defaultBorderColor)
+          ? "../assets/pb-logo-no-bg-w.png"
+          : "../assets/pb-logo-no-bg.png";
+      }
+    }
+
+    if (colorPicker) {
+      const rgb = defaultBorderColor.match(/\d+/g);
+      if (rgb) {
+        const [r, g, b] = rgb.map(Number);
+        colorPicker.value = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+      } else {
+        colorPicker.value = "#ffffff";
+      }
+    }
+  }
+
+  closeBtn?.addEventListener("click", () => {
+    photoModal.classList.remove("show");
+    photoModal.classList.add("hidden");
+    resetModal();
+  });
 
   retakeBtn?.addEventListener("click", () => {
     photoModal.classList.remove("show");
     photoModal.classList.add("hidden");
-    slots.forEach(slot => slot.innerHTML = "");
-    currentSlot = 0;
+    resetModal();
   });
 
   photoModal?.addEventListener("click", (e) => {
     if (e.target === photoModal) {
       photoModal.classList.remove("show");
       photoModal.classList.add("hidden");
-      modalSlots.forEach(slot => slot.innerHTML = "");
+      resetModal();
     }
   });
+
+  // Automatically request camera on page load
+  initCamera();
 });
+
