@@ -81,6 +81,11 @@
                 <div id="preview-text-overlay" class="preview-text-overlay">Camera access required</div>
             </div>
             <div class="polaroid-caption">
+                <div id="photo-count-indicator" class="photo-count-indicator">
+                  <span class="photo-dot active"></span>
+                  <span class="photo-dot"></span>
+                  <span class="photo-dot"></span>
+                </div>
                 <button id="start" class="capture-button" aria-label="Capture photo"></button>
                 <button id="timer-btn" class="timer-button" title="Timer: 0 seconds">
                 <span class="timer-icon"></span>
@@ -91,7 +96,7 @@
         </div>
 
         <!-- RIGHT PANEL: Photo Strip -->
-        <div class="photostrip-container">
+        <div id="photostrip-container" class="photostrip-container">
             <div id="photostrip-preview">
                 <div class="strip-slot" id="slot-1"></div>
                 <div class="strip-slot" id="slot-2"></div>

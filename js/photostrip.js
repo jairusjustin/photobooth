@@ -28,6 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const photoModal = document.getElementById("photo-modal");
   let currentSlot = 0;
 
+  const photoDots = document.querySelectorAll(".photo-dot");
+  let currentIndex = 0;
+
   // Photostrip customization
   const previewFrame = document.getElementById("photostrip-preview");
   const colorCircles = document.querySelectorAll(".color-circle");
@@ -126,6 +129,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------- */
+  /* PHOTO COUNT INDICATOR */
+  /* ---------------------- */
+function switchDot() {
+  photoDots[currentIndex].classList.remove("active"); // remove red from current
+  currentIndex = (currentIndex + 1) % photoDots.length; // move to next
+  photoDots[currentIndex].classList.add("active"); // make new dot red
+  console.log("Current red dot:", currentIndex);
+}
+
+  /* ---------------------- */
   /* FRAME CUSTOMIZATION */
   /* ---------------------- */
   colorCircles.forEach(circle => {
@@ -200,7 +213,10 @@ startBtn.addEventListener("click", async () => {
   slots[currentSlot].innerHTML = "";
   slots[currentSlot].appendChild(img);
   slots[currentSlot].dataset.imgData = imgData;
+
   currentSlot++;
+  
+  switchDot();
 
   if (currentSlot === slots.length) {
     setTimeout(() => {
