@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const startBtn = document.getElementById("start");
   const closeBtn = document.getElementById("close-btn");
   const retakeBtn = document.getElementById("retake-btn");
+  const shareBtn = document.getElementById("share-btn");
   const downloadBtn = document.getElementById("download-btn");
 
   const slots = [
@@ -362,6 +363,137 @@ startBtn.addEventListener("click", async () => {
         link.click();
       };
     }
+  });
+
+  shareBtn?.addEventListener("click", () => {
+    const photostrip = document.getElementById("photostrip-preview");
+    if (!photostrip) return;
+
+    const frameColor = previewFrame.style.borderColor || defaultBorderColor;
+    const bgColor = previewFrame.style.backgroundColor || "#fff";
+
+    const scale = 4.2;
+    const photoWidth = 140 * scale;
+    const photoHeight = 475 * scale;
+    const borderTop = 8 * scale;
+    const borderSides = 8 * scale;
+    const borderBottom = 16 * scale;
+    const radius = 10 * scale;
+    const slotHeight = 150 * scale;
+    const slotGap = 4 * scale;
+    const canvasWidth = photoWidth + borderSides * 2;
+    const canvasHeight = photoHeight + borderTop + borderBottom;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    const ctx = canvas.getContext("2d");
+
+    // Draw background
+    ctx.fillStyle = bgColor;
+    ctx.beginPath();
+    ctx.moveTo(radius, 0);
+    ctx.lineTo(canvasWidth - radius, 0);
+    ctx.quadraticCurveTo(canvasWidth, 0, canvasWidth, radius);
+    ctx.lineTo(canvasWidth, canvasHeight - radius);
+    ctx.quadraticCurveTo(canvasWidth, canvasHeight, canvasWidth - radius, canvasHeight);
+    ctx.lineTo(radius, canvasHeight);
+    ctx.quadraticCurveTo(0, canvasHeight, 0, canvasHeight - radius);
+    ctx.lineTo(0, radius);
+    ctx.quadraticCurveTo(0, 0, radius, 0);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(radius, borderTop);
+    ctx.lineTo(canvasWidth - radius, borderTop);
+    ctx.quadraticCurveTo(canvasWidth - borderSides, borderTop, canvasWidth - borderSides, radius + borderTop);
+    ctx.lineTo(canvasWidth - borderSides, canvasHeight - borderBottom - radius);
+    ctx.quadraticCurveTo(canvasWidth - borderSides, canvasHeight - borderBottom, canvasWidth - radius, canvasHeight - borderBottom);
+    ctx.lineTo(radius, canvasHeight - borderBottom);
+    ctx.quadraticCurveTo(borderSides, canvasHeight - borderBottom, borderSides, canvasHeight - borderBottom - radius);
+    ctx.lineTo(borderSides, radius + borderTop);
+    ctx.quadraticCurveTo(borderSides, borderTop, radius, borderTop);
+    ctx.closePath();
+    ctx.clip();
+
+    const slots = photostrip.querySelectorAll(".strip-slot");
+    slots.forEach((slot, index) => {
+        const img = slot.querySelector("img");
+        if (!img) return;
+
+        const slotY = borderTop + index * (slotHeight + slotGap);
+        const slotRatio = photoWidth / slotHeight;
+        const imgRatio = img.naturalWidth / img.naturalHeight;
+
+        let sx = 0, sy = 0, sWidth = img.naturalWidth, sHeight = img.naturalHeight;
+
+        if (imgRatio > slotRatio) {
+            sHeight = img.naturalHeight;
+            sWidth = sHeight * slotRatio;
+            sx = (img.naturalWidth - sWidth) / 2;
+        } else {
+            sWidth = img.naturalWidth;
+            sHeight = sWidth / slotRatio;
+            sy = (img.naturalHeight - sHeight) / 2;
+        }
+
+        ctx.drawImage(img, sx, sy, sWidth, sHeight, borderSides, slotY, photoWidth, slotHeight);
+    });
+    ctx.restore();
+
+    // Draw border
+    ctx.strokeStyle = frameColor;
+    ctx.lineWidth = borderSides;
+    ctx.beginPath();
+    ctx.moveTo(radius, borderTop / 2);
+    ctx.lineTo(canvasWidth - radius, borderTop / 2);
+    ctx.quadraticCurveTo(canvasWidth - borderSides / 2, borderTop / 2, canvasWidth - borderSides / 2, radius + borderTop / 2);
+    ctx.lineTo(canvasWidth - borderSides / 2, canvasHeight - radius);
+    ctx.quadraticCurveTo(canvasWidth - borderSides / 2, canvasHeight - borderBottom / 2, canvasWidth - radius, canvasHeight - borderBottom / 2);
+    ctx.lineTo(radius, canvasHeight - borderBottom / 2);
+    ctx.quadraticCurveTo(borderSides / 2, canvasHeight - borderBottom / 2, borderSides / 2, canvasHeight - radius);
+    ctx.lineTo(borderSides / 2, radius + borderTop / 2);
+    ctx.quadraticCurveTo(borderSides / 2, borderTop / 2, radius, borderTop / 2);
+    ctx.closePath();
+    ctx.stroke();
+
+    const logo = photostrip.querySelector(".photostrip-caption .logo");
+    if (logo) {
+        const logoImg = new Image();
+        logoImg.src = isColorDark(frameColor)
+            ? "../assets/pb-logo-no-bg-w.png"
+            : "../assets/pb-logo-no-bg.png";
+        logoImg.onload = () => {
+            const logoHeight = 15 * scale;
+            const logoRatio = logoImg.width / logoImg.height;
+            const logoWidth = logoHeight * logoRatio;
+            const x = (canvasWidth - logoWidth) / 2;
+            const y = canvasHeight - borderBottom + (borderBottom - logoHeight) / 2 - 8 * scale;
+            ctx.drawImage(logoImg, x, y, logoWidth, logoHeight);
+
+            // Share instead of download
+            canvas.toBlob(async (blob) => {
+                if (!blob) return;
+                const file = new File([blob], getPhotostripFilename(), { type: "image/png" });
+
+                if (navigator.share && navigator.canShare?.({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            title: "My Photostrip",
+                            text: "Snapped this with Photobooth ✨",
+                            files: [file],
+                        });
+                    } catch (err) {
+                        console.log("Share cancelled:", err);
+                    }
+                } else {
+                    alert("Sharing not supported in this browser. Try downloading instead.");
+                }
+            }, "image/png");
+        };
+      }
   });
 
   /* ---------------------- */

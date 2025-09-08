@@ -1130,10 +1130,10 @@ video::-webkit-media-controls-enclosure {
 /* Bottom actions */
 .bottom-actions {
   display: flex;
-  justify-content: center;  /* center horizontally */
-  gap: 1.5rem;
-  margin-top: auto;         /* ✅ pushes this block to the bottom */
-  margin-bottom: 1rem;
+  justify-content: center;  
+  gap: 1rem;                 /* smaller gap */
+  margin-top: auto;         
+  margin-bottom: 0.8rem;
   width: 100%;
 }
 
@@ -1143,18 +1143,18 @@ video::-webkit-media-controls-enclosure {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
+  gap: 0.3rem;              /* tighter spacing */
 }
 
-/* Icon buttons */
+/* Icon buttons (smaller) */
 .icon-btn {
-  width: 52px;
-  height: 52px;
+  width: 44px;              /* reduced from 52px */
+  height: 44px;
   border: none;
   border-radius: 50%;
   background: #111;
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 1rem;          /* smaller icon size */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1165,12 +1165,12 @@ video::-webkit-media-controls-enclosure {
 .icon-btn:hover {
   background: #e53935;
   transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.15);
 }
 
 /* Label hover underline */
 .label {
-  font-size: 0.8rem;
+  font-size: 0.7rem;         /* slightly smaller label */
   color: #111;
   text-align: center;
   padding-bottom: 2px;
@@ -1283,30 +1283,31 @@ video::-webkit-media-controls-enclosure {
 /* ---------------------- */
 .photostrip-container {
   flex: 1;
-  max-width: 350px;
+  max-width: 300px;   /* smaller container */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.6rem;        /* smaller gap */
+  overflow-y: auto;   /* allow scroll if necessary */
+  margin-top: 2rem; /* spacing from top */
 }
 
 /* ---------------------- */
 /* PHOTOSTRIP PREVIEW AREA */
 /* ---------------------- */
-/* ---------------------- */
 #photostrip-preview {
   display: flex;
   flex-direction: column;
-  width: 140px;             
-  height: 475px;            
+  width: 115px;       /* scaled down */
+  height: 380px;      /* scaled down */
   
   /* Polaroid-style border */
   border-style: solid;
   border-color: #fff;
-  border-width: 8px 8px 16px 8px;  /* smaller bottom border */
-  border-radius: 10px;
+  border-width: 6px 6px 12px 6px;  /* smaller borders */
+  border-radius: 8px;               /* smaller radius */
   background-color: #fff;  
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12); /* lighter shadow */
   
   overflow: visible;  /* allow caption to extend outside */
   padding: 0;
@@ -1316,13 +1317,13 @@ video::-webkit-media-controls-enclosure {
 /* Individual miniature photo slots */
 .strip-slot {
   width: 100%;
-  height: 150px;           
+  height: 120px;           /* smaller slots */
   background-image: linear-gradient(145deg, #f9f9f9, #eaeaea);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin-bottom: 4px;      
+  margin-bottom: 2px;      /* smaller gap */
 }
 
 .strip-slot:last-child {
@@ -1338,16 +1339,16 @@ video::-webkit-media-controls-enclosure {
 /* Photostrip caption/logo */
 #photostrip-preview .photostrip-caption {
   position: absolute;
-  bottom: -8px;         
+  bottom: -5px;          /* slightly higher */
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;            
+  width: 70%;            /* narrower */
   text-align: center;
   pointer-events: none;
 }
 
 #photostrip-preview .photostrip-caption .logo {
-  height: 15px;          
+  height: 12px;          /* smaller logo */
   width: auto;
   display: block;
   margin: 0 auto;

@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeBtn = document.getElementById("close-btn");
   const retakeBtn = document.getElementById("retake-btn");
   const downloadBtn = document.getElementById("download-btn");
+  const shareBtn = document.getElementById("share-btn");
   const captureContainer = document.getElementById("capture-polaroid");
   const photoModal = document.getElementById("photo-modal");
   const modalImage = document.getElementById("modal-image");
@@ -244,6 +245,105 @@ downloadBtn?.addEventListener("click", () => {
   };
 });
 
+
+shareBtn?.addEventListener("click", () => {
+  if (!modalImage.src) return;
+  const frameColor = previewFrame.style.borderColor || defaultBorderColor;
+  const scale = 2;
+  const rect = captureContainer.getBoundingClientRect();
+  const canvasWidth = rect.width * scale;
+  const canvasHeight = rect.height * scale;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
+  const ctx = canvas.getContext("2d");
+
+  const radius = 20 * scale;
+  ctx.beginPath();
+  ctx.moveTo(radius, 0);
+  ctx.lineTo(canvasWidth - radius, 0);
+  ctx.quadraticCurveTo(canvasWidth, 0, canvasWidth, radius);
+  ctx.lineTo(canvasWidth, canvasHeight - radius);
+  ctx.quadraticCurveTo(canvasWidth, canvasHeight, canvasWidth - radius, canvasHeight);
+  ctx.lineTo(radius, canvasHeight);
+  ctx.quadraticCurveTo(0, canvasHeight, 0, canvasHeight - radius);
+  ctx.lineTo(0, radius);
+  ctx.quadraticCurveTo(0, 0, radius, 0);
+  ctx.closePath();
+  ctx.clip();
+
+  // Frame background color
+  ctx.fillStyle = frameColor;
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+  // Polaroid gradient
+  const gradient = ctx.createLinearGradient(0, 0, canvasWidth, canvasHeight);
+  gradient.addColorStop(0, "#f9f9f9");
+  gradient.addColorStop(1, "#eaeaea");
+  ctx.fillStyle = gradient;
+
+  const paddingX = 14 * scale;
+  const paddingY = 14 * scale;
+  const bottomExtra = 84 * scale;
+  ctx.fillRect(paddingX, paddingY, canvasWidth - paddingX * 2, canvasHeight - bottomExtra);
+
+  const img = new Image();
+  img.src = modalImage.src;
+  img.onload = () => {
+    const previewWidth = canvasWidth - paddingX * 2;
+    const previewHeight = canvasHeight - bottomExtra;
+    const previewRatio = previewWidth / previewHeight;
+    const imgRatio = img.width / img.height;
+
+    let sx = 0, sy = 0, sWidth = img.width, sHeight = img.height;
+    if (imgRatio > previewRatio) {
+      sHeight = img.height;
+      sWidth = sHeight * previewRatio;
+      sx = (img.width - sWidth) / 2;
+    } else {
+      sWidth = img.width;
+      sHeight = sWidth / previewRatio;
+      sy = (img.height - sHeight) / 2;
+    }
+
+    ctx.drawImage(img, sx, sy, sWidth, sHeight, paddingX, paddingY, previewWidth, previewHeight);
+
+    // Logo
+    const logoImgCanvas = new Image();
+    logoImgCanvas.src = isColorDark(frameColor)
+      ? "../assets/pb-logo-no-bg-w.png"
+      : "../assets/pb-logo-no-bg.png";
+    logoImgCanvas.onload = () => {
+      const logoHeight = 30 * scale;
+      const logoRatio = logoImgCanvas.width / logoImgCanvas.height;
+      const logoWidth = logoHeight * logoRatio;
+      const x = (canvasWidth - logoWidth) / 2;
+      const y = canvasHeight - 50 * scale;
+      ctx.drawImage(logoImgCanvas, x, y, logoWidth, logoHeight);
+
+      // Share logic
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
+        const file = new File([blob], getPolaroidFilename(), { type: "image/png" });
+
+        if (navigator.share && navigator.canShare?.({ files: [file] })) {
+          try {
+            await navigator.share({
+              title: "My Photobooth Shot",
+              text: "Snapped this with Photobooth ✨",
+              files: [file],
+            });
+          } catch (err) {
+            console.log("Share cancelled:", err);
+          }
+        } else {
+          alert("Sharing not supported in this browser. Try downloading instead.");
+        }
+      }, "image/png");
+    };
+  };
+});
   /* ---------------------- */
   /* MODAL CONTROLS */
   /* ---------------------- */
