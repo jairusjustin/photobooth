@@ -56,8 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateLogoColor(frameColor) {
     logoImg.src = isColorDark(frameColor)
-      ? "../assets/pb-logo-no-bg-w.png"
-      : "../assets/pb-logo-no-bg.png";
+      ? "assets/pb-logo-no-bg-w.png"
+      : "assets/pb-logo-no-bg.png";
   }
 
   function showPreviewOverlay() { 
@@ -227,8 +227,8 @@ downloadBtn?.addEventListener("click", () => {
     // Logo
     const logoImgCanvas = new Image();
     logoImgCanvas.src = isColorDark(frameColor)
-      ? "../assets/pb-logo-no-bg-w.png"
-      : "../assets/pb-logo-no-bg.png";
+      ? "assets/pb-logo-no-bg-w.png"
+      : "assets/pb-logo-no-bg.png";
     logoImgCanvas.onload = () => {
       const logoHeight = 30 * scale;
       const logoRatio = logoImgCanvas.width / logoImgCanvas.height;
@@ -312,8 +312,8 @@ shareBtn?.addEventListener("click", () => {
     // Logo
     const logoImgCanvas = new Image();
     logoImgCanvas.src = isColorDark(frameColor)
-      ? "../assets/pb-logo-no-bg-w.png"
-      : "../assets/pb-logo-no-bg.png";
+      ? "assets/pb-logo-no-bg-w.png"
+      : "assets/pb-logo-no-bg.png";
     logoImgCanvas.onload = () => {
       const logoHeight = 30 * scale;
       const logoRatio = logoImgCanvas.width / logoImgCanvas.height;

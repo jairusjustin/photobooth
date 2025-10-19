@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <li><a href="contact.html">Contact</a></li>
       <li>
         <a href="https://github.com/jairusjustin" target="_blank">
-          <img src="../assets/github-icon.png" alt="GitHub" style="height: 24px; width: 24px;" />
+          <img src="assets/github-icon.png" alt="GitHub" style="height: 24px; width: 24px;" />
         </a>
       </li>
     </ul>

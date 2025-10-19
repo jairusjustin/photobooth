@@ -8,17 +8,16 @@ contactForm.addEventListener("submit", async (e) => {
   try {
     const response = await fetch(contactForm.action, {
       method: "POST",
-      body: formData
+      body: formData,
+      headers: { Accept: "application/json" }
     });
 
-    const result = await response.json();
-
-    if(result.success){
+    if (response.ok) {
       Swal.fire({
         icon: "success",
         title: "Message Sent!",
-        text: result.message,
-        timer: 1000,
+        text: "Thank you for reaching out. We’ll get back to you soon!",
+        timer: 1500,
         showConfirmButton: false
       });
       contactForm.reset();
@@ -26,17 +25,16 @@ contactForm.addEventListener("submit", async (e) => {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: result.message,
+        text: "Something went wrong. Please try again later.",
         timer: 1500,
         showConfirmButton: true
       });
     }
-
   } catch (error) {
     Swal.fire({
       icon: "error",
       title: "Error",
-      text: "Something went wrong. Please try again later.",
+      text: "Network issue or invalid endpoint. Please check your connection.",
       timer: 1500,
       showConfirmButton: true
     });

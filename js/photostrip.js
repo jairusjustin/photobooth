@@ -71,8 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateLogoColor(frameColor) {
     if (!logoImg) return;
     logoImg.src = isColorDark(frameColor)
-      ? "../assets/pb-logo-no-bg-w.png"
-      : "../assets/pb-logo-no-bg.png";
+      ? "assets/pb-logo-no-bg-w.png"
+      : "assets/pb-logo-no-bg.png";
   }
 
   function showPreviewOverlay() {
@@ -159,8 +159,8 @@ function switchDot() {
         const modalLogo = modalPhotostrip.querySelector(".photostrip-caption .logo");
         if (modalLogo) {
           modalLogo.src = isColorDark(color)
-            ? "../assets/pb-logo-no-bg-w.png"
-            : "../assets/pb-logo-no-bg.png";
+            ? "assets/pb-logo-no-bg-w.png"
+            : "assets/pb-logo-no-bg.png";
         }
       }
 
@@ -346,8 +346,8 @@ startBtn.addEventListener("click", async () => {
     if (logo) {
       const logoImg = new Image();
       logoImg.src = isColorDark(frameColor)
-        ? "../assets/pb-logo-no-bg-w.png"
-        : "../assets/pb-logo-no-bg.png";
+        ? "assets/pb-logo-no-bg-w.png"
+        : "assets/pb-logo-no-bg.png";
       logoImg.onload = () => {
         const logoHeight = 15 * scale;
         const logoRatio = logoImg.width / logoImg.height;
@@ -463,8 +463,8 @@ startBtn.addEventListener("click", async () => {
     if (logo) {
         const logoImg = new Image();
         logoImg.src = isColorDark(frameColor)
-            ? "../assets/pb-logo-no-bg-w.png"
-            : "../assets/pb-logo-no-bg.png";
+            ? "assets/pb-logo-no-bg-w.png"
+            : "assets/pb-logo-no-bg.png";
         logoImg.onload = () => {
             const logoHeight = 15 * scale;
             const logoRatio = logoImg.width / logoImg.height;
@@ -517,8 +517,8 @@ startBtn.addEventListener("click", async () => {
       const modalLogo = modalPhotostrip.querySelector(".photostrip-caption .logo");
       if (modalLogo) {
         modalLogo.src = isColorDark(defaultBorderColor)
-          ? "../assets/pb-logo-no-bg-w.png"
-          : "../assets/pb-logo-no-bg.png";
+          ? "assets/pb-logo-no-bg-w.png"
+          : "assets/pb-logo-no-bg.png";
       }
     }
 

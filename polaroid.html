@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Photo Strip Capture</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <title>Capture Photo</title>
+  <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 </head>
 <body>
 
@@ -14,7 +15,7 @@
 <header class="header">
   <div class="logo">
     <a href="index.html">
-      <img src="../assets/pb-logo.png" alt="Photobooth" />
+      <img src="assets/pb-logo.png" alt="Photobooth" />
     </a>    
   </div>
 
@@ -29,7 +30,7 @@
 
   <div class="github-icon">
     <a href="https://github.com/jairusjustin" target="_blank" aria-label="GitHub">
-      <img src="../assets/github-icon.png" alt="GitHub" />
+      <img src="assets/github-icon.png" alt="GitHub" />
     </a>
   </div>
 
@@ -67,53 +68,27 @@
 
 <!-- Main Content -->
 <main>
-    <div class="photostrip-page-wrapper">
-
-    <!-- Flex container for left & right panels -->
-    <div class="photostrip-wrapper">
-
-        <!-- LEFT PANEL: Camera + Polaroid Preview -->
-        <div class="polaroid-wrapper">
-            <div class="polaroid-container" id="capture-polaroid">
-            <div class="preview-wrapper">
-                <video id="polaroid-preview" autoplay muted playsinline hidden></video>
-                <div id="countdown-overlay" class="countdown-overlay"></div>
-                <div id="preview-text-overlay" class="preview-text-overlay">Camera access required</div>
-            </div>
-            <div class="polaroid-caption">
-                <div id="photo-count-indicator" class="photo-count-indicator">
-                  <span class="photo-dot active"></span>
-                  <span class="photo-dot"></span>
-                  <span class="photo-dot"></span>
-                </div>
-                <button id="start" class="capture-button" aria-label="Capture photo"></button>
-                <button id="timer-btn" class="timer-button" title="Timer: 0 seconds">
-                <span class="timer-icon"></span>
-                <span class="timer-text">0s</span>
-                </button>
-            </div>
-            </div>
-        </div>
-
-        <!-- RIGHT PANEL: Photo Strip -->
-        <div id="photostrip-container" class="photostrip-container">
-            <div id="photostrip-preview">
-                <div class="strip-slot" id="slot-1"></div>
-                <div class="strip-slot" id="slot-2"></div>
-                <div class="strip-slot" id="slot-3"></div>
-                <!-- Logo for photostrip -->
-                <div class="photostrip-caption">
-                <img src="../assets/pb-logo-no-bg.png" alt="Logo" class="logo" />
-                </div>
-            </div>
-        </div>
-
+  <div class="polaroid-wrapper">
+    <div class="polaroid-container"  id="capture-polaroid">
+      <div class="preview-wrapper">
+        <video id="polaroid-preview" autoplay muted playsinline hidden></video>
+        <div id="countdown-overlay" class="countdown-overlay"></div>
+        <div id="preview-text-overlay" class="preview-text-overlay">Camera access required</div>
+      </div>
+      <div class="polaroid-caption">
+        <button id="start" class="capture-button" aria-label="Capture photo"></button>
+        <button id="timer-btn" class="timer-button" title="Timer: 0 seconds">
+          <span class="timer-icon"></span>
+          <span class="timer-text">0s</span>
+        </button>
+      </div>
     </div>
-    </div>
+  </div>
 
 <div id="photo-modal" class="photo-modal hidden">
-  <div class="photo-modal-content">
 
+  <div class="photo-modal-content">
+  
     <!-- Top-right Close Button -->
     <button class="close-overlay" id="close-btn">&times;</button>
 
@@ -177,14 +152,12 @@
 
     </div>
 
-    <!-- RIGHT: Photostrip Preview -->
+    <!-- RIGHT: Polaroid Preview -->
     <div class="modal-right">
-      <div id="photostrip-preview">
-        <div class="strip-slot" id="modal-slot-1"></div>
-        <div class="strip-slot" id="modal-slot-2"></div>
-        <div class="strip-slot" id="modal-slot-3"></div>
-        <div class="photostrip-caption">
-          <img src="../assets/pb-logo-no-bg.png" alt="Logo" class="logo" />
+      <div class="polaroid-preview" id="polaroid-frame">
+        <img id="modal-image" alt="Captured Photo">
+        <div class="polaroid-caption">
+          <img src="assets/pb-logo-no-bg.png" alt="Logo" class="logo">
         </div>
       </div>
     </div>
@@ -196,7 +169,7 @@
 
 </main>
 
-<script src="../js/main.js"></script>
-<script src="../js/photostrip.js"></script>
+<script src="js/main.js"></script>
+<script src="js/polaroid.js"></script>
 </body>
 </html>
