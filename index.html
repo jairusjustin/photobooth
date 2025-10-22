@@ -6,85 +6,83 @@
   <title>Photobooth</title>
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="icon" type="image/png" href="assets/photobooth_icon.png?v=1">
 </head>
 <body>
 
-<!--  Sticky Header -->
-<header class="header">
-  <div class="logo">
-    <a href="index.html">
-      <img src="assets/pb-logo.png" alt="Photobooth" />
-    </a>    
-  </div>
+  <!-- Header Section -->
+  <header class="header">
+    <div class="logo">
+      <a href="index.html">
+        <img src="assets/pb-logo.png" alt="Photobooth" />
+      </a>    
+    </div>
 
-  <nav>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="privacy.html">Privacy Policy</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="github-icon">
+      <a href="https://github.com/jairusjustin" target="_blank" aria-label="GitHub">
+        <img src="assets/github-icon.png" alt="GitHub" />
+      </a>
+    </div>
+
+    <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
     <ul>
       <li><a href="index.html" class="active">Home</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="privacy.html">Privacy Policy</a></li>
-      <li><a href="contact.html">Contact</a></li>
+      <li><a href="#privacy">Privacy Policy</a></li>
+      <li><a href="#contact">Contact</a></li>
     </ul>
-  </nav>
-
-  <!-- GitHub icon only -->
-  <div class="github-icon">
-    <a href="https://github.com/jairusjustin" target="_blank" aria-label="GitHub">
-      <img src="assets/github-icon.png" alt="GitHub" />
-    </a>
   </div>
 
-  <!-- Hamburger button (mobile only) -->
-  <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-</header>
-
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu">
-  <ul>
-    <li><a href="index.html" class="active">Home</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="#privacy">Privacy Policy</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</div>
-
-<!-- Main Content -->
-<main>
-  <div id="index-polaroid-wrapper" class="polaroid-wrapper">
-    <div class="polaroid-container">
-      <div class="tape">
-        <img src="assets/pb-logo-no-bg.png" alt="Logo" />
-      </div>
-      <div class="by-text">
-        by
-      </div>
-      <div class="floating-logo"><img src="assets/studio-logo-no-bg.png" alt="logo"></div>
+  <!-- Main Content Section -->
+  <main>
+    <div id="index-polaroid-wrapper" class="polaroid-wrapper">
+      <div class="polaroid-container">
+        <div class="tape">
+          <img src="assets/pb-logo-no-bg.png" alt="Logo" />
+        </div>
+        <div class="by-text">by</div>
+        <div class="floating-logo">
+          <img src="assets/studio-logo-no-bg.png" alt="logo">
+        </div>
         
-      <!-- Start button now opens modal -->
-      <button id="open-modal-btn" class="start-button">
-        <span class="camera-icon">📷</span> Start
-      </button>      
+        <button id="open-modal-btn" class="start-button">
+          <span class="camera-icon">📷</span> Start
+        </button>      
 
-      <div class="polaroid-caption">Keep it timeless.</div>
+        <div class="polaroid-caption">Keep it timeless.</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Style Selection Modal -->
+  <div id="startModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Select a Style</h2>
+      <div class="options">
+        <button id="polaroid-option" class="option-btn">📸 Polaroid</button>
+        <button id="strip-option" class="option-btn">🎞️ Photo Strip</button>
+      </div>
+      <button id="close-modal-btn" class="close-btn">Cancel</button>
     </div>
   </div>
-</main>
 
-<!-- Modal -->
-<div id="startModal" class="modal hidden">
-  <div class="modal-content">
-    <h2>Select a Style</h2>
-    <div class="options">
-      <button id="polaroid-option" class="option-btn">📸 Polaroid</button>
-      <button id="strip-option" class="option-btn">🎞️ Photo Strip</button>
-    </div>
-    <button id="close-modal-btn" class="close-btn">Cancel</button>
-  </div>
-</div>
-
-<script src="js/main.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>

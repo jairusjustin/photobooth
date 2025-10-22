@@ -84,8 +84,6 @@ nav ul li a.active:hover {
   cursor: pointer;
   padding: 0;
   z-index: 1100;
-  
-  /* Fix position independent of header padding */
   position: absolute;
   right: 20px;
   top: 50%;
@@ -178,20 +176,19 @@ body, html {
 .content-wrapper {
   max-width: 750px;
   margin: 0 auto;
-  padding: 4rem 1.5rem 2rem; /* space from nav/header for all screens */
+  padding: 4rem 1.5rem 2rem; 
   display: flex;
   flex-direction: column;
-  gap: 2.5rem; /* slightly smaller gap between About, FAQ, Privacy, Contact */
+  gap: 2.5rem; 
 }
 
-/* About, Privacy, Contact: unified container style */
 .about-container,
 .privacy-container,
 .contact-container {
   text-align: center;
   background-color: #fdfdfd;
   border-radius: 12px;
-  padding: 1.2rem 1.5rem; /* balanced padding */
+  padding: 1.2rem 1.5rem; 
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   color: #111;
   font-family: 'Inter', sans-serif;
@@ -201,10 +198,10 @@ body, html {
 .about-container h1,
 .privacy-container h1,
 .contact-container h1 {
-  font-size: 1.35rem;      /* slightly smaller than before */
+  font-size: 1.35rem;      
   font-weight: 600;
-  margin-top: 0;            /* remove top margin */
-  margin-bottom: 0.75rem;  /* small spacing below */
+  margin-top: 0;            
+  margin-bottom: 0.75rem;  
   color: #111;
   text-align: center;
   line-height: 1.25;
@@ -213,7 +210,7 @@ body, html {
 .about-container p,
 .privacy-container p,
 .contact-container p {
-  font-size: 14px; /* scaled to your request */
+  font-size: 14px; 
   margin: 0.4rem 0;
   line-height: 1.4;
 }
@@ -223,13 +220,13 @@ body, html {
 .faq-container {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem; /* slightly smaller gap between FAQ items */
+  gap: 0.75rem; 
   font-family: 'Inter', sans-serif;
   color: #222;
 }
 
 .faq-container h1 {
-  font-size: 1.35rem;  /* scaled down proportionally */
+  font-size: 1.35rem; 
   font-weight: 600;
   margin-bottom: 0.8rem;
   text-align: center;
@@ -237,7 +234,7 @@ body, html {
 }
 
 .faq-item {
-  padding: 0.9rem 1.25rem;  /* slightly smaller */
+  padding: 0.9rem 1.25rem;  
   border-left: 3px solid #e53935;
   background-color: #fdfdfd;
   border-radius: 8px;
@@ -250,7 +247,7 @@ body, html {
 }
 
 .faq-item h3 {
-  font-size: 1rem;        /* slightly smaller */
+  font-size: 1rem;        
   font-weight: 500;
   margin-bottom: 0.35rem;
   display: flex;
@@ -267,7 +264,7 @@ body, html {
 }
 
 .faq-item p {
-  font-size: 14px; /* scaled */
+  font-size: 14px; 
   color: #444;
   margin: 0;
 }
@@ -277,8 +274,8 @@ body, html {
 .contact-form {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;       /* slightly smaller gap between fields */
-  margin-top: 0.7rem; /* smaller top margin */
+  gap: 0.7rem;       
+  margin-top: 0.7rem; 
 }
 
 .contact-form .form-group {
@@ -290,16 +287,16 @@ body, html {
 .contact-form label {
   font-weight: 500;
   margin-bottom: 0.3rem;
-  font-size: 0.83rem;   /* scaled slightly smaller */
+  font-size: 0.83rem;   
 }
 
 .contact-form input,
 .contact-form textarea {
-  padding: 0.45rem 0.65rem;  /* smaller padding */
+  padding: 0.45rem 0.65rem;  
   border: 1px solid #ccc;
   border-radius: 8px;
   font-family: 'Inter', sans-serif;
-  font-size: 0.8rem;       /* scaled input text */
+  font-size: 0.8rem;       
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -314,7 +311,7 @@ body, html {
   padding: 0.5rem 1rem;
   background-color: #e53935;
   color: #fff;
-  font-size: 0.83rem;  /* smaller button text */
+  font-size: 0.83rem; 
   font-weight: 500;
   border: none;
   border-radius: 8px;
@@ -361,11 +358,11 @@ main {
   position: relative;
   width: 320px; 
   height: 395px; 
-  margin: 30px auto 0 auto;       /* center horizontally */
+  margin: 30px auto 0 auto;      
   display: flex;
-  justify-content: center;   /* center main polaroid horizontally */
-  align-items: center;       /* center main polaroid vertically */
-  z-index: 10;               /* ensure main polaroid is above faint ones */
+  justify-content: center;   
+  align-items: center;       
+  z-index: 10;               
 }
 
 /* Main polaroid container on index only */
@@ -394,7 +391,7 @@ main {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
   filter: blur(1px);
   box-sizing: border-box;
-  z-index: 1;           /* below main polaroid */
+  z-index: 1;           
   pointer-events: none;
 }
 
@@ -416,7 +413,7 @@ main {
 @media screen and (max-width: 786px) {
   #index-polaroid-wrapper::before,
   #index-polaroid-wrapper::after {
-    display: none; /* hide faint polaroids on small screens */
+    display: none; 
   }
 }
 
@@ -713,7 +710,7 @@ main {
 .camera-dots span {
   width: 6px;
   height: 6px;
-  background: #222; /* dark color for contrast */  
+  background: #222; 
   border-radius: 50%;
   animation: blink 1.2s infinite;
 }
@@ -733,7 +730,7 @@ main {
 .camera-dots span {
   width: 6px;
   height: 6px;
-  background: #222; /* dark color for contrast */
+  background: #222; 
   border-radius: 50%;
   animation: blink 1.2s infinite;
 }
@@ -745,34 +742,30 @@ main {
   40% { opacity: 1; }
 }
 
-/* Retry icon hidden by default */
 .retry-btn {
-  display: none;           /* hidden initially */
-  background: transparent; /* no background */
-  border: none;            /* no border */
-  padding: 0;              /* remove padding */
-  margin: 0;               /* remove margin */
-  font-size: 1rem;         /* size of icon */
-  color: #222;             /* match dots color */
+  display: none;           
+  background: transparent; 
+  border: none;            
+  padding: 0;              
+  margin: 0;              
+  font-size: 1rem;         
+  color: #222;             
   cursor: pointer;
   align-items: center;
   justify-content: center;
   transition: transform 0.2s ease;
 }
 
-/* Show retry when JS adds 'show' class */
 .retry-btn.show {
   display: flex;
   animation: rotateRetry 1.2s infinite;
 }
 
-/* Rotate animation for retry icon */
 @keyframes rotateRetry {
   0%, 80%, 100% { transform: rotate(0deg); }
   40% { transform: rotate(20deg); }
 }
 
-/* Center both dots and retry */
 .camera-status {
   display: flex;
   justify-content: center;
@@ -1063,10 +1056,8 @@ video::-webkit-media-controls-enclosure {
   flex-direction: row;
   align-items: flex-start;
   gap: 2rem;
-
-  /* Modal sizing */
-  width: auto;              /* shrink-to-fit content */
-  max-width: 90vw;          /* but don’t exceed viewport */
+  width: auto;              
+  max-width: 90vw;          
   max-height: 90vh;
   padding: 2rem;
   border-radius: 20px;
@@ -1076,7 +1067,7 @@ video::-webkit-media-controls-enclosure {
 
   overflow-y: auto;
   box-sizing: border-box;
-  margin: 0 auto;           /* center horizontally */
+  margin: 0 auto;           
 }
 
 /* For enter/exit animation */
@@ -1101,13 +1092,13 @@ video::-webkit-media-controls-enclosure {
 .modal-left {
   flex: 0 0 220px;
   display: flex;
-  flex-direction: column;   /* vertical stack */
+  flex-direction: column;   
   align-items: center;
-  justify-content: flex-start; /* content flows from top */
+  justify-content: flex-start; 
   gap: 1.5rem;
   padding: 2rem 0;
   box-sizing: border-box;
-  height: 100%;             /* ✅ take full modal height */
+  height: 100%;             
 }
 
 /* Title */
@@ -1117,7 +1108,7 @@ video::-webkit-media-controls-enclosure {
   color: #111;
   text-align: center;
   width: 100%;
-  margin-top: 0.5rem; /* small extra spacing from top padding */
+  margin-top: 0.5rem; 
 }
 
 /* Frame color label */
@@ -1126,17 +1117,17 @@ video::-webkit-media-controls-enclosure {
   color: #555;
   text-align: center;
   width: 100%;
-  margin-bottom: 0.5rem; /* spacing before color circles */
+  margin-bottom: 0.5rem; 
 }
 /* Color circles container */
 .color-picker-circles {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.6rem;             /* consistent spacing */
+  gap: 0.6rem;            
   margin: 0.5rem 0;
   padding: 0;
-  max-width: 220px;        /* 5 per row with gaps */
+  max-width: 220px;        
   box-sizing: border-box;
 }
 
@@ -1144,9 +1135,9 @@ video::-webkit-media-controls-enclosure {
 .color-circle {
   width: 30px;
   height: 30px;
-  aspect-ratio: 1 / 1;     /* 🔑 guarantees square */
-  flex: 0 0 auto;          /* don’t shrink or stretch */
-  border-radius: 50%;      /* circle */
+  aspect-ratio: 1 / 1;     
+  flex: 0 0 auto;          
+  border-radius: 50%;      
   border: 1px solid #aaa;
   cursor: pointer;
   transition: transform 0.2s ease, border-color 0.2s ease;
@@ -1157,7 +1148,7 @@ video::-webkit-media-controls-enclosure {
 .bottom-actions {
   display: flex;
   justify-content: center;  
-  gap: 1rem;                 /* smaller gap */
+  gap: 1rem;                 
   margin-top: auto;         
   margin-bottom: 0.8rem;
   width: 100%;
@@ -1169,18 +1160,18 @@ video::-webkit-media-controls-enclosure {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.3rem;              /* tighter spacing */
+  gap: 0.3rem;              
 }
 
 /* Icon buttons (smaller) */
 .icon-btn {
-  width: 44px;              /* reduced from 52px */
+  width: 44px;              
   height: 44px;
   border: none;
   border-radius: 50%;
   background: #111;
   color: #fff;
-  font-size: 1rem;          /* smaller icon size */
+  font-size: 1rem;          
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1194,9 +1185,8 @@ video::-webkit-media-controls-enclosure {
   box-shadow: 0 5px 10px rgba(0,0,0,0.15);
 }
 
-/* Label hover underline */
 .label {
-  font-size: 0.7rem;         /* slightly smaller label */
+  font-size: 0.7rem;        
   color: #111;
   text-align: center;
   padding-bottom: 2px;
@@ -1211,7 +1201,7 @@ video::-webkit-media-controls-enclosure {
 /* Optional: adjust for very small screens */
 @media (max-width: 400px) {
   .color-circle {
-    flex: 1 0 20%; /* slightly smaller so 5 still fits */
+    flex: 1 0 20%; 
     max-width: 24px;
   }
 }
@@ -1220,7 +1210,7 @@ video::-webkit-media-controls-enclosure {
 /* MODAL RIGHT PANEL (Polaroid Preview) */
 /* ====================================================== */
 .modal-right {
-  flex: 0 0 auto;           /* take natural width of its content */
+  flex: 0 0 auto;           
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1309,13 +1299,13 @@ video::-webkit-media-controls-enclosure {
 /* ---------------------- */
 .photostrip-container {
   flex: 1;
-  max-width: 300px;   /* smaller container */
+  max-width: 300px;   
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.6rem;        /* smaller gap */
-  overflow-y: auto;   /* allow scroll if necessary */
-  margin-top: 2rem; /* spacing from top */
+  gap: 0.6rem;        
+  overflow-y: auto;   
+  margin-top: 2rem; 
 }
 
 /* ---------------------- */
@@ -1324,18 +1314,18 @@ video::-webkit-media-controls-enclosure {
 #photostrip-preview {
   display: flex;
   flex-direction: column;
-  width: 115px;       /* scaled down */
-  height: 380px;      /* scaled down */
+  width: 115px;       
+  height: 380px;      
   
   /* Polaroid-style border */
   border-style: solid;
   border-color: #fff;
-  border-width: 6px 6px 12px 6px;  /* smaller borders */
-  border-radius: 8px;               /* smaller radius */
+  border-width: 6px 6px 12px 6px;  
+  border-radius: 8px;               
   background-color: #fff;  
-  box-shadow: 0 4px 10px rgba(0,0,0,0.12); /* lighter shadow */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12); 
   
-  overflow: visible;  /* allow caption to extend outside */
+  overflow: visible;  
   padding: 0;
   position: relative;
 }
@@ -1343,13 +1333,13 @@ video::-webkit-media-controls-enclosure {
 /* Individual miniature photo slots */
 .strip-slot {
   width: 100%;
-  height: 120px;           /* smaller slots */
+  height: 120px;           
   background-image: linear-gradient(145deg, #f9f9f9, #eaeaea);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin-bottom: 2px;      /* smaller gap */
+  margin-bottom: 2px;      
 }
 
 .strip-slot:last-child {
@@ -1365,16 +1355,16 @@ video::-webkit-media-controls-enclosure {
 /* Photostrip caption/logo */
 #photostrip-preview .photostrip-caption {
   position: absolute;
-  bottom: -5px;          /* slightly higher */
+  bottom: -5px;       
   left: 50%;
   transform: translateX(-50%);
-  width: 70%;            /* narrower */
+  width: 70%;           
   text-align: center;
   pointer-events: none;
 }
 
 #photostrip-preview .photostrip-caption .logo {
-  height: 12px;          /* smaller logo */
+  height: 12px;        
   width: auto;
   display: block;
   margin: 0 auto;
@@ -1387,7 +1377,7 @@ video::-webkit-media-controls-enclosure {
 .photo-count-indicator {
     position: absolute;
     left: 0px;
-    bottom: 6px; /* move it up 6px from bottom */
+    bottom: 6px; 
     display: flex;
     gap: 4px;
     padding: 2px 6px;
@@ -1399,12 +1389,12 @@ video::-webkit-media-controls-enclosure {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background-color: black; /* default gray */
+    background-color: black; 
     transition: background-color 0.3s;
 }
 
 .photo-dot.active {
-    background-color: #e53935 !important; /* force red */
+    background-color: #e53935 !important; /
 }
 
 

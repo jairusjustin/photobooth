@@ -5,198 +5,187 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Photo Strip Capture</title>
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="assets/photobooth_icon.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
-<!-- Sticky Header -->
-<header class="header">
-  <div class="logo">
-    <a href="index.html">
-      <img src="assets/pb-logo.png" alt="Photobooth" />
-    </a>    
-  </div>
+  <!-- Header Section -->
+  <header class="header">
+    <div class="logo">
+      <a href="index.html">
+        <img src="assets/pb-logo.png" alt="Photobooth" />
+      </a>    
+    </div>
 
-  <nav>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="privacy.html">Privacy Policy</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="github-icon">
+      <a href="https://github.com/jairusjustin" target="_blank" aria-label="GitHub">
+        <img src="assets/github-icon.png" alt="GitHub" />
+      </a>
+    </div>
+
+    <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
     <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="privacy.html">Privacy Policy</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
-  </nav>
-
-  <div class="github-icon">
-    <a href="https://github.com/jairusjustin" target="_blank" aria-label="GitHub">
-      <img src="assets/github-icon.png" alt="GitHub" />
-    </a>
   </div>
 
-  <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-</header>
-
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu">
-  <ul>
-    <li><a href="index.html">Home</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="privacy.html">Privacy Policy</a></li>
-    <li><a href="contact.html">Contact</a></li>
-  </ul>
-</div>
-
-<!-- Camera Permission Overlay -->
-<div id="camera-permission-overlay" class="camera-overlay">
-  <div class="camera-modal">
-    <button class="close-overlay" aria-label="Close overlay">&times;</button>
-    <h2>Accessing Camera</h2>
-    <p>Allow your camera to capture moments in style.</p>
-    <div class="camera-status">
-      <div class="camera-dots" id="camera-dots">
-        <span></span><span></span><span></span>
+  <!-- Camera Permission Overlay -->
+  <div id="camera-permission-overlay" class="camera-overlay">
+    <div class="camera-modal">
+      <button class="close-overlay" aria-label="Close overlay">&times;</button>
+      <h2>Accessing Camera</h2>
+      <p>Allow your camera to capture moments in style.</p>
+      <div class="camera-status">
+        <div class="camera-dots" id="camera-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <button class="retry-btn" id="retry-camera" title="Retry Camera Access">
+          <i class="fa-solid fa-rotate"></i>
+        </button>
       </div>
-      <button class="retry-btn" id="retry-camera" title="Retry Camera Access"><i class="fa-solid fa-rotate"></i></button>
     </div>
   </div>
-</div>
 
-<!-- Main Content -->
-<main>
+  <!-- Main Content Section -->
+  <main>
     <div class="photostrip-page-wrapper">
+      <div class="photostrip-wrapper">
 
-    <!-- Flex container for left & right panels -->
-    <div class="photostrip-wrapper">
-
-        <!-- LEFT PANEL: Camera + Polaroid Preview -->
+        <!-- Camera Panel -->
         <div class="polaroid-wrapper">
-            <div class="polaroid-container" id="capture-polaroid">
+          <div class="polaroid-container" id="capture-polaroid">
             <div class="preview-wrapper">
-                <video id="polaroid-preview" autoplay muted playsinline hidden></video>
-                <div id="countdown-overlay" class="countdown-overlay"></div>
-                <div id="preview-text-overlay" class="preview-text-overlay">Camera access required</div>
+              <video id="polaroid-preview" autoplay muted playsinline hidden></video>
+              <div id="countdown-overlay" class="countdown-overlay"></div>
+              <div id="preview-text-overlay" class="preview-text-overlay">Camera access required</div>
             </div>
             <div class="polaroid-caption">
-                <div id="photo-count-indicator" class="photo-count-indicator">
-                  <span class="photo-dot active"></span>
-                  <span class="photo-dot"></span>
-                  <span class="photo-dot"></span>
-                </div>
-                <button id="start" class="capture-button" aria-label="Capture photo"></button>
-                <button id="timer-btn" class="timer-button" title="Timer: 0 seconds">
+              <div id="photo-count-indicator" class="photo-count-indicator">
+                <span class="photo-dot active"></span>
+                <span class="photo-dot"></span>
+                <span class="photo-dot"></span>
+              </div>
+              <button id="start" class="capture-button" aria-label="Capture photo"></button>
+              <button id="timer-btn" class="timer-button" title="Timer: 0 seconds">
                 <span class="timer-icon"></span>
                 <span class="timer-text">0s</span>
-                </button>
+              </button>
             </div>
-            </div>
+          </div>
         </div>
 
-        <!-- RIGHT PANEL: Photo Strip -->
+        <!-- Photo Strip Preview Panel -->
         <div id="photostrip-container" class="photostrip-container">
-            <div id="photostrip-preview">
-                <div class="strip-slot" id="slot-1"></div>
-                <div class="strip-slot" id="slot-2"></div>
-                <div class="strip-slot" id="slot-3"></div>
-                <!-- Logo for photostrip -->
-                <div class="photostrip-caption">
-                <img src="assets/pb-logo-no-bg.png" alt="Logo" class="logo" />
-                </div>
+          <div id="photostrip-preview">
+            <div class="strip-slot" id="slot-1"></div>
+            <div class="strip-slot" id="slot-2"></div>
+            <div class="strip-slot" id="slot-3"></div>
+            <div class="photostrip-caption">
+              <img src="assets/pb-logo-no-bg.png" alt="Logo" class="logo" />
             </div>
+          </div>
         </div>
 
-    </div>
-    </div>
-
-<div id="photo-modal" class="photo-modal hidden">
-  <div class="photo-modal-content">
-
-    <!-- Top-right Close Button -->
-    <button class="close-overlay" id="close-btn">&times;</button>
-
-    <!-- LEFT: Customize & Actions -->
-    <div class="modal-left">
-
-      <!-- Title -->
-      <div class="customize-title">Customize</div>
-
-      <!-- Frame Color Label -->
-      <div class="frame-label">Frame Color</div>
-
-      <!-- Color Picker Circles -->
-      <div class="color-picker-circles">
-
-        <!-- Row 1: Monochrome -->
-        <span class="color-circle" data-color="#ffffff" style="background:#ffffff;"></span>
-        <span class="color-circle" data-color="#f9f9f9" style="background:#f9f9f9;"></span>
-        <span class="color-circle" data-color="#e0e0e0" style="background:#e0e0e0;"></span>
-        <span class="color-circle" data-color="#bfbfbf" style="background:#bfbfbf;"></span>
-        <span class="color-circle" data-color="#000000" style="background:#000000;"></span>
-
-        <!-- Row 2: Pastel  -->
-        <span class="color-circle" data-color="#ffc0cb" style="background:#ffc0cb;"></span>
-        <span class="color-circle" data-color="#add8e6" style="background:#add8e6;"></span>
-        <span class="color-circle" data-color="#fffacd" style="background:#fffacd;"></span>
-        <span class="color-circle" data-color="#d0f0c0" style="background:#d0f0c0;"></span>
-        <span class="color-circle" data-color="#e0e0ff" style="background:#e0e0ff;"></span>
-
-        <!-- Row 3: Muted -->
-        <span class="color-circle" data-color="#d46a6a" style="background:#d46a6a;"></span>
-        <span class="color-circle" data-color="#6a8fd4" style="background:#6a8fd4;"></span>
-        <span class="color-circle" data-color="#d4c26a" style="background:#d4c26a;"></span>
-        <span class="color-circle" data-color="#6ad49a" style="background:#6ad49a;"></span>
-        <span class="color-circle" data-color="#a46ad4" style="background:#a46ad4;"></span>
-
-        <input type="color" id="color-picker" hidden>
-      </div>
-
-      <!-- Bottom Buttons: Download & Retake -->
-      <div class="bottom-actions">
-        <div class="action-group">
-          <button id="download-btn" class="icon-btn" title="Download">
-            <i class="fa-solid fa-download"></i>
-          </button>
-          <span class="label">Download</span>
-        </div>
-        <div class="action-group">
-          <button id="share-btn" class="icon-btn" title="Share">
-            <i class="fa-solid fa-share-nodes"></i>
-          </button>
-          <span class="label">Share</span>
-        </div>
-        <div class="action-group">
-          <button id="retake-btn" class="icon-btn" title="Retake">
-            <i class="fa-solid fa-camera-rotate"></i>
-          </button>
-          <span class="label">Retake</span>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- RIGHT: Photostrip Preview -->
-    <div class="modal-right">
-      <div id="photostrip-preview">
-        <div class="strip-slot" id="modal-slot-1"></div>
-        <div class="strip-slot" id="modal-slot-2"></div>
-        <div class="strip-slot" id="modal-slot-3"></div>
-        <div class="photostrip-caption">
-          <img src="assets/pb-logo-no-bg.png" alt="Logo" class="logo" />
-        </div>
       </div>
     </div>
 
-  </div>
-</div>
+    <!-- Photo Customization Modal -->
+    <div id="photo-modal" class="photo-modal hidden">
+      <div class="photo-modal-content">
+        <button class="close-overlay" id="close-btn">&times;</button>
 
+        <!-- Customization Panel -->
+        <div class="modal-left">
+          <div class="customize-title">Customize</div>
+          
+          <div class="frame-label">Frame Color</div>
+          
+          <div class="color-picker-circles">
+            <!-- Monochrome Colors -->
+            <span class="color-circle" data-color="#ffffff" style="background:#ffffff;"></span>
+            <span class="color-circle" data-color="#f9f9f9" style="background:#f9f9f9;"></span>
+            <span class="color-circle" data-color="#e0e0e0" style="background:#e0e0e0;"></span>
+            <span class="color-circle" data-color="#bfbfbf" style="background:#bfbfbf;"></span>
+            <span class="color-circle" data-color="#000000" style="background:#000000;"></span>
 
+            <!-- Pastel Colors -->
+            <span class="color-circle" data-color="#ffc0cb" style="background:#ffc0cb;"></span>
+            <span class="color-circle" data-color="#add8e6" style="background:#add8e6;"></span>
+            <span class="color-circle" data-color="#fffacd" style="background:#fffacd;"></span>
+            <span class="color-circle" data-color="#d0f0c0" style="background:#d0f0c0;"></span>
+            <span class="color-circle" data-color="#e0e0ff" style="background:#e0e0ff;"></span>
 
-</main>
+            <!-- Muted Colors -->
+            <span class="color-circle" data-color="#d46a6a" style="background:#d46a6a;"></span>
+            <span class="color-circle" data-color="#6a8fd4" style="background:#6a8fd4;"></span>
+            <span class="color-circle" data-color="#d4c26a" style="background:#d4c26a;"></span>
+            <span class="color-circle" data-color="#6ad49a" style="background:#6ad49a;"></span>
+            <span class="color-circle" data-color="#a46ad4" style="background:#a46ad4;"></span>
 
-<script src="js/main.js"></script>
-<script src="js/photostrip.js"></script>
+            <input type="color" id="color-picker" hidden>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="bottom-actions">
+            <div class="action-group">
+              <button id="download-btn" class="icon-btn" title="Download">
+                <i class="fa-solid fa-download"></i>
+              </button>
+              <span class="label">Download</span>
+            </div>
+            <div class="action-group">
+              <button id="share-btn" class="icon-btn" title="Share">
+                <i class="fa-solid fa-share-nodes"></i>
+              </button>
+              <span class="label">Share</span>
+            </div>
+            <div class="action-group">
+              <button id="retake-btn" class="icon-btn" title="Retake">
+                <i class="fa-solid fa-camera-rotate"></i>
+              </button>
+              <span class="label">Retake</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo Strip Preview Panel -->
+        <div class="modal-right">
+          <div id="photostrip-preview">
+            <div class="strip-slot" id="modal-slot-1"></div>
+            <div class="strip-slot" id="modal-slot-2"></div>
+            <div class="strip-slot" id="modal-slot-3"></div>
+            <div class="photostrip-caption">
+              <img src="assets/pb-logo-no-bg.png" alt="Logo" class="logo" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/main.js"></script>
+  <script src="js/photostrip.js"></script>
 </body>
 </html>

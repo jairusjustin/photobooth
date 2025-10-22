@@ -133,9 +133,9 @@ document.addEventListener("DOMContentLoaded", () => {
   /* PHOTO COUNT INDICATOR */
   /* ---------------------- */
 function switchDot() {
-  photoDots[currentIndex].classList.remove("active"); // remove red from current
-  currentIndex = (currentIndex + 1) % photoDots.length; // move to next
-  photoDots[currentIndex].classList.add("active"); // make new dot red
+  photoDots[currentIndex].classList.remove("active"); 
+  currentIndex = (currentIndex + 1) % photoDots.length; 
+  photoDots[currentIndex].classList.add("active"); 
   console.log("Current red dot:", currentIndex);
 }
 
@@ -186,12 +186,12 @@ let isCapturing = false;
 
 startBtn.addEventListener("click", async () => {
   if (currentSlot >= slots.length) return;
-  if (isCapturing) return; // Ignore clicks while capturing
+  if (isCapturing) return; 
 
-  isCapturing = true; // Block further clicks
+  isCapturing = true; 
 
   const delay = window.getCurrentDelay?.() || 0;
-  await window.showCountdown?.(delay); // Wait countdown
+  await window.showCountdown?.(delay); 
 
   // --- Capture logic ---
   const canvas = document.createElement("canvas");
@@ -240,7 +240,7 @@ startBtn.addEventListener("click", async () => {
 
   startBtn.blur();
 
-  isCapturing = false; // Allow clicks again after capture
+  isCapturing = false; 
 });
 
   downloadBtn?.addEventListener("click", () => {
