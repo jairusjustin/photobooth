@@ -1603,3 +1603,28 @@ video::-webkit-media-controls-enclosure {
     height: 130px;
   }
 }
+
+/* Retake Confirmation Styles */
+#retake-confirm-overlay .camera-status {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+#retake-confirm-overlay .retry-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#retake-confirm-overlay .retry-btn:hover {
+  background: #f5f5f5;
+  transform: translateY(-1px);
+}

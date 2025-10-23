@@ -185,6 +185,23 @@
     </div>
   </main>
 
+  <!-- Retake Confirmation Modal -->
+  <div id="retake-confirm-overlay" class="camera-overlay hidden">
+    <div class="camera-modal">
+      <button class="close-overlay" aria-label="Close overlay">&times;</button>
+      <h2>Retake Photo?</h2>
+      <p>This will remove the current photo.</p>
+      <div class="camera-status">
+        <button id="retake-confirm-cancel" class="retry-btn" title="Cancel">
+          Cancel
+        </button>
+        <button id="retake-confirm-ok" class="retry-btn" title="Retake" style="color: #e53935;">
+          Retake
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script src="js/main.js"></script>
   <script src="js/photostrip.js"></script>
 </body>

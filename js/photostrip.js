@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let dotsToRetryTimeout;
 
   let currentRetakeSlot = null;
+  let pendingRetakeSlot = null;
 
   /* ---------------------- */
   /* HELPER FUNCTIONS */
@@ -167,7 +168,7 @@ function showRetakeButton(slotNumber) {
     
     retakeBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      retakePhoto(slotNumber);
+      showRetakeConfirmation(slotNumber);
     });
   }
   
@@ -180,39 +181,41 @@ function hideAllRetakeButtons() {
   currentRetakeSlot = null;
 }
 
-function retakePhoto(slotNumber) {
-  if (confirm(`Retake photo #${slotNumber}?`)) {
-    const slot = document.getElementById(`slot-${slotNumber}`);
-    const modalSlot = document.getElementById(`modal-slot-${slotNumber}`);
-    
-    // Clear the slot
-    slot.innerHTML = '';
-    modalSlot.innerHTML = '';
-    
-    // Remove all retake buttons
-    hideAllRetakeButtons();
-    
-    // Update current slot to allow retaking this position
-    currentSlot = slotNumber - 1;
-    
-    // Update photo indicator
-    updatePhotoIndicator();
-    
-    // Re-enable capture button
-    startBtn.disabled = false;
-    
-    // Show retake button for the previous photo (if it exists)
-    if (slotNumber > 1) {
-      const previousSlot = document.getElementById(`slot-${slotNumber - 1}`);
-      if (previousSlot.querySelector('img')) {
-        showRetakeButton(slotNumber - 1);
-      }
-    }
-    
-    console.log(`Retook photo #${slotNumber}. Current slot: ${currentSlot}`);
-  }
+function showRetakeConfirmation(slotNumber) {
+  pendingRetakeSlot = slotNumber;
+  document.getElementById('retake-confirm-overlay').classList.remove('hidden');
 }
 
+function retakePhoto(slotNumber) {
+  const slot = document.getElementById(`slot-${slotNumber}`);
+  const modalSlot = document.getElementById(`modal-slot-${slotNumber}`);
+  
+  // Clear the slot
+  slot.innerHTML = '';
+  modalSlot.innerHTML = '';
+  
+  // Remove all retake buttons
+  hideAllRetakeButtons();
+  
+  // Update current slot to allow retaking this position
+  currentSlot = slotNumber - 1;
+  
+  // Update photo indicator
+  updatePhotoIndicator();
+  
+  // Re-enable capture button
+  startBtn.disabled = false;
+  
+  // Show retake button for the previous photo (if it exists)
+  if (slotNumber > 1) {
+    const previousSlot = document.getElementById(`slot-${slotNumber - 1}`);
+    if (previousSlot.querySelector('img')) {
+      showRetakeButton(slotNumber - 1);
+    }
+  }
+  
+  console.log(`Retook photo #${slotNumber}. Current slot: ${currentSlot}`);
+}
 
   /* ---------------------- */
   /* FRAME CUSTOMIZATION */
@@ -632,6 +635,31 @@ startBtn.addEventListener("click", async () => {
       photoModal.classList.remove("show");
       photoModal.classList.add("hidden");
       resetModal();
+    }
+  });
+
+  document.getElementById('retake-confirm-ok')?.addEventListener('click', () => {
+    if (pendingRetakeSlot !== null) {
+      retakePhoto(pendingRetakeSlot);
+      pendingRetakeSlot = null;
+    }
+    document.getElementById('retake-confirm-overlay').classList.add('hidden');
+  });
+
+  document.getElementById('retake-confirm-cancel')?.addEventListener('click', () => {
+    pendingRetakeSlot = null;
+    document.getElementById('retake-confirm-overlay').classList.add('hidden');
+  });
+
+  document.querySelector('#retake-confirm-overlay .close-overlay')?.addEventListener('click', () => {
+    pendingRetakeSlot = null;
+    document.getElementById('retake-confirm-overlay').classList.add('hidden');
+  });
+
+  document.getElementById('retake-confirm-overlay')?.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('retake-confirm-overlay')) {
+      pendingRetakeSlot = null;
+      e.target.classList.add('hidden');
     }
   });
 
