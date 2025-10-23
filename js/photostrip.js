@@ -41,6 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let dotsToRetryTimeout;
 
+  let currentRetakeSlot = null;
+
   /* ---------------------- */
   /* HELPER FUNCTIONS */
   /* ---------------------- */
@@ -95,6 +97,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 5000);
   }
 
+  function updatePhotoIndicator() {
+    photoDots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === currentSlot);
+    });
+    currentIndex = currentSlot;
+  }
+
   function getPhotostripFilename() {
     const now = new Date();
     const pad = (n) => n.toString().padStart(2, "0");
@@ -132,12 +141,78 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ---------------------- */
   /* PHOTO COUNT INDICATOR */
   /* ---------------------- */
-function switchDot() {
-  photoDots[currentIndex].classList.remove("active"); 
-  currentIndex = (currentIndex + 1) % photoDots.length; 
-  photoDots[currentIndex].classList.add("active"); 
-  console.log("Current red dot:", currentIndex);
+  function switchDot() {
+    photoDots[currentIndex].classList.remove("active"); 
+    currentIndex = (currentIndex + 1) % photoDots.length; 
+    photoDots[currentIndex].classList.add("active"); 
+    console.log("Current red dot:", currentIndex);
+  }
+
+  /* ---------------------- */
+/* INDIVIDUAL RETAKE FUNCTIONS */
+/* ---------------------- */
+function showRetakeButton(slotNumber) {
+  // Remove any existing retake buttons first
+  hideAllRetakeButtons();
+  
+  // Show retake button for current slot
+  const slot = document.getElementById(`slot-${slotNumber}`);
+  if (slot && slot.querySelector('img')) {
+    const retakeBtn = document.createElement('button');
+    retakeBtn.className = 'slot-retake-mini';
+    retakeBtn.dataset.slot = slotNumber;
+    retakeBtn.title = 'Retake this photo';
+    retakeBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i>';
+    slot.appendChild(retakeBtn);
+    
+    retakeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      retakePhoto(slotNumber);
+    });
+  }
+  
+  currentRetakeSlot = slotNumber;
 }
+
+function hideAllRetakeButtons() {
+  const allRetakeButtons = document.querySelectorAll('.slot-retake-mini');
+  allRetakeButtons.forEach(btn => btn.remove());
+  currentRetakeSlot = null;
+}
+
+function retakePhoto(slotNumber) {
+  if (confirm(`Retake photo #${slotNumber}?`)) {
+    const slot = document.getElementById(`slot-${slotNumber}`);
+    const modalSlot = document.getElementById(`modal-slot-${slotNumber}`);
+    
+    // Clear the slot
+    slot.innerHTML = '';
+    modalSlot.innerHTML = '';
+    
+    // Remove all retake buttons
+    hideAllRetakeButtons();
+    
+    // Update current slot to allow retaking this position
+    currentSlot = slotNumber - 1;
+    
+    // Update photo indicator
+    updatePhotoIndicator();
+    
+    // Re-enable capture button
+    startBtn.disabled = false;
+    
+    // Show retake button for the previous photo (if it exists)
+    if (slotNumber > 1) {
+      const previousSlot = document.getElementById(`slot-${slotNumber - 1}`);
+      if (previousSlot.querySelector('img')) {
+        showRetakeButton(slotNumber - 1);
+      }
+    }
+    
+    console.log(`Retook photo #${slotNumber}. Current slot: ${currentSlot}`);
+  }
+}
+
 
   /* ---------------------- */
   /* FRAME CUSTOMIZATION */
@@ -215,11 +290,15 @@ startBtn.addEventListener("click", async () => {
   slots[currentSlot].appendChild(img);
   slots[currentSlot].dataset.imgData = imgData;
 
+  // Show retake button for this photo (hide previous one) 
+  showRetakeButton(currentSlot + 1);
+
   currentSlot++;
   
   switchDot();
 
   if (currentSlot === slots.length) {
+    hideAllRetakeButtons();
     setTimeout(() => {
       photoModal.classList.remove("hidden");
       photoModal.classList.add("show");
@@ -505,6 +584,8 @@ startBtn.addEventListener("click", async () => {
     currentSlot = 0;
 
     window.resetTimer?.();
+    updatePhotoIndicator();
+    hideAllRetakeButtons();
 
     previewFrame.style.borderColor = defaultBorderColor;
     previewFrame.style.backgroundColor = "#fff";
@@ -531,6 +612,7 @@ startBtn.addEventListener("click", async () => {
         colorPicker.value = "#ffffff";
       }
     }
+    
   }
 
   closeBtn?.addEventListener("click", () => {
