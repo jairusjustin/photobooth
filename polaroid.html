@@ -76,16 +76,68 @@
           <video id="polaroid-preview" autoplay muted playsinline hidden></video>
           <div id="countdown-overlay" class="countdown-overlay"></div>
           <div id="preview-text-overlay" class="preview-text-overlay">Camera access required</div>
+<div class="effects-overlay" id="effects-overlay">
+  <div class="effects-grid">
+    <div class="effect-option active" data-effect="none">
+      <div class="effect-preview"><i class="fa-solid fa-camera"></i></div>
+      <span class="effect-name">Normal</span>
+    </div>
+
+    <div class="effect-option" data-effect="sunlight">
+      <div class="effect-preview"><i class="fa-solid fa-sun"></i></div>
+      <span class="effect-name">Sunlight</span>
+    </div>
+
+    <div class="effect-option" data-effect="cool">
+      <div class="effect-preview"><i class="fa-solid fa-snowflake"></i></div>
+      <span class="effect-name">Cool</span>
+    </div>
+
+    <div class="effect-option" data-effect="color-film">
+      <div class="effect-preview"><i class="fa-solid fa-palette"></i></div>
+      <span class="effect-name">Color Film</span>
+    </div>
+
+    <div class="effect-option" data-effect="soft-film">
+      <div class="effect-preview"><i class="fa-solid fa-cloud"></i></div>
+      <span class="effect-name">Soft Film</span>
+    </div>
+
+    <div class="effect-option" data-effect="vintage">
+      <div class="effect-preview"><i class="fa-solid fa-film"></i></div>
+      <span class="effect-name">Vintage</span>
+    </div>
+
+    <div class="effect-option" data-effect="bnw">
+      <div class="effect-preview"><i class="fa-solid fa-circle-half-stroke"></i></div>
+      <span class="effect-name">B&amp;W</span>
+    </div>
+
+    <div class="effect-option" data-effect="grunge">
+      <div class="effect-preview"><i class="fa-solid fa-burst"></i></div>
+      <span class="effect-name">Grunge</span>
+    </div>
+
+    <div class="effect-option" data-effect="low-exposure">
+      <div class="effect-preview"><i class="fa-solid fa-clapperboard"></i></div>
+      <span class="effect-name">Cinematic</span>
+    </div>
+  </div>
+</div>
+
         </div>
         <div class="polaroid-caption">
+          <button id="effects-modal-btn" class="effects-modal-btn" title="Filters">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </button>
           <button id="start" class="capture-button" aria-label="Capture photo"></button>
           <button id="timer-btn" class="timer-button" title="Timer: 0 seconds">
             <span class="timer-icon"></span>
             <span class="timer-text">0s</span>
           </button>
+          </div>
         </div>
       </div>
-    </div>
 
     <!-- Photo Customization Modal -->
     <div id="photo-modal" class="photo-modal hidden">

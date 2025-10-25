@@ -25,7 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const logoImg = previewFrame.querySelector(".polaroid-caption img");
   const defaultBorderColor = getComputedStyle(previewFrame).borderColor;
 
+  // Effects elements - NEW
+  const effectsModalBtn = document.getElementById("effects-modal-btn");
+  const effectsOverlay = document.getElementById("effects-overlay");
+  const effectOptions = document.querySelectorAll(".effect-option");
+
   let dotsToRetryTimeout;
+  let currentEffect = 'none';
 
   /* ---------------------- */
   /* HELPER FUNCTIONS */
@@ -78,6 +84,68 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 5000);
   }
 
+
+
+function applyEffectToVideoPreview() {
+  // Reset filter
+  video.style.filter = 'none';
+  video.style.mixBlendMode = 'normal';
+
+  switch (currentEffect) {
+    case 'sunlight':
+      video.style.filter = 'contrast(1.1) brightness(1.05) saturate(1.2) hue-rotate(-5deg)';
+      break;
+    case 'cool':
+      video.style.filter = 'contrast(1.2) brightness(0.95) saturate(0.95) hue-rotate(15deg)';
+      break;
+    case 'vintage':
+      video.style.filter = 'contrast(0.9) brightness(1.05) saturate(0.8) sepia(0.4) hue-rotate(-10deg)';
+      break;
+    case 'color-film':
+      video.style.filter = 'contrast(1.1) brightness(1.05) saturate(1.3) hue-rotate(5deg)';
+      break;
+    case 'soft-film':
+      video.style.filter = 'contrast(0.95) brightness(1.1) saturate(0.9) sepia(0.2) blur(0.3px)';
+      break;
+    case 'bnw':
+      video.style.filter = 'grayscale(1) brightness(1.08) contrast(0.85) sepia(0.08) blur(0.3px)';
+      break;
+    case 'grunge':
+      video.style.filter = 'contrast(1.6) brightness(0.8) saturate(0.7)';
+      break;
+    case 'low-exposure':
+      video.style.filter = 'brightness(0.75) contrast(1.25) saturate(0.75) hue-rotate(-5deg)';
+      break;
+    case 'none':
+    default:
+      break;
+  }
+}
+
+function getCurrentEffectFilter() {
+  switch (currentEffect) {
+    case 'sunlight':
+      return 'contrast(1.1) brightness(1.05) saturate(1.2) hue-rotate(-5deg)';
+    case 'cool':
+      return 'contrast(1.2) brightness(0.95) saturate(0.95) hue-rotate(15deg)';
+    case 'vintage':
+      return 'contrast(0.9) brightness(1.05) saturate(0.8) sepia(0.4) hue-rotate(-10deg)';
+    case 'color-film':
+      return 'contrast(1.1) brightness(1.05) saturate(1.3) hue-rotate(5deg)';
+    case 'soft-film':
+      return 'contrast(0.95) brightness(1.1) saturate(0.9) sepia(0.2) blur(0.3px)';
+    case 'bnw':
+      return 'grayscale(1) brightness(1.08) contrast(0.85) sepia(0.08) blur(0.3px)';
+    case 'grunge':
+      return 'contrast(1.6) brightness(0.8) saturate(0.7)';
+    case 'low-exposure':
+      return 'brightness(0.75) contrast(1.25) saturate(0.75) hue-rotate(-5deg)';
+    case 'none':
+    default:
+      return 'none';
+  }
+}
+
   function getPolaroidFilename() {
     const now = new Date();
     const pad = (n) => n.toString().padStart(2, "0");
@@ -127,6 +195,37 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ---------------------- */
   /* EVENT LISTENERS */
   /* ---------------------- */
+  // Effects overlay functionality - NEW
+  effectsModalBtn?.addEventListener("click", () => {
+    effectsOverlay.classList.toggle("show");
+  });
+
+  // Close effects overlay when clicking outside
+  effectsOverlay?.addEventListener("click", (e) => {
+    if (e.target === effectsOverlay) {
+      effectsOverlay.classList.remove("show");
+    }
+  });
+
+  // Update effect selection
+  effectOptions.forEach(option => {
+    option.addEventListener("click", function() {
+      // Remove active class from all options
+      effectOptions.forEach(opt => opt.classList.remove("active"));
+      // Add active class to clicked option
+      this.classList.add("active");
+      
+      // Set current effect
+      currentEffect = this.dataset.effect;
+      
+      // Apply effect to video preview
+      applyEffectToVideoPreview();
+      
+      // Close overlay after selection
+      effectsOverlay.classList.remove("show");
+    });
+  });
+
   retryBtn?.addEventListener("click", initCamera);
     overlayCloseBtn?.addEventListener("click", () => {
     permissionOverlay.classList.add("hidden");
@@ -150,11 +249,18 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext("2d");
+
+    // Mirror like preview
     ctx.translate(canvas.width, 0);
     ctx.scale(-1, 1);
+
+    // Apply effect filter
+    ctx.filter = getCurrentEffectFilter();
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    modalImage.src = canvas.toDataURL("image/png");
+    ctx.globalCompositeOperation = 'source-over'; // Reset blending mode for the next steps
+
+    modalImage.src = canvas.toDataURL("image/png");
     photoModal.classList.add("show");
     photoModal.classList.remove("hidden");
 
@@ -352,6 +458,18 @@ shareBtn?.addEventListener("click", () => {
     window.resetTimer();
     previewFrame.style.borderColor = defaultBorderColor;
     updateLogoColor(defaultBorderColor);
+    
+    // Reset effects to default
+    currentEffect = 'none';
+    applyEffectToVideoPreview();
+    
+    // Reset effect options
+    effectOptions.forEach(option => {
+      option.classList.remove('active');
+      if (option.dataset.effect === 'none') {
+        option.classList.add('active');
+      }
+    });
   }
 
   closeBtn?.addEventListener("click", () => {
@@ -372,7 +490,7 @@ shareBtn?.addEventListener("click", () => {
       photoModal.classList.add("hidden");
       resetModal();
     }
-  });
+  }); 
 
   initCamera();
 });
