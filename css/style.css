@@ -1749,6 +1749,22 @@ video::-webkit-media-controls-enclosure {
   max-width: 100%;
 }
 
+.effects-modal-btn.active-effect {
+  color: #111;
+}
+
+.effects-modal-btn.active-effect::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 6px;
+  height: 6px;
+  background: #e53935;
+  border-radius: 50%;
+  border: 1px solid #fff;
+}
+
 /* Responsive - Make smaller on mobile */
 @media (max-width: 768px) {
   .effects-overlay {

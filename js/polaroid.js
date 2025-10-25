@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const logoImg = previewFrame.querySelector(".polaroid-caption img");
   const defaultBorderColor = getComputedStyle(previewFrame).borderColor;
 
-  // Effects elements - NEW
+  // Effects elements
   const effectsModalBtn = document.getElementById("effects-modal-btn");
   const effectsOverlay = document.getElementById("effects-overlay");
   const effectOptions = document.querySelectorAll(".effect-option");
@@ -84,67 +84,75 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 5000);
   }
 
-
-
-function applyEffectToVideoPreview() {
-  // Reset filter
-  video.style.filter = 'none';
-  video.style.mixBlendMode = 'normal';
-
-  switch (currentEffect) {
-    case 'sunlight':
-      video.style.filter = 'contrast(1.1) brightness(1.05) saturate(1.2) hue-rotate(-5deg)';
-      break;
-    case 'cool':
-      video.style.filter = 'contrast(1.2) brightness(0.95) saturate(0.95) hue-rotate(15deg)';
-      break;
-    case 'vintage':
-      video.style.filter = 'contrast(0.9) brightness(1.05) saturate(0.8) sepia(0.4) hue-rotate(-10deg)';
-      break;
-    case 'color-film':
-      video.style.filter = 'contrast(1.1) brightness(1.05) saturate(1.3) hue-rotate(5deg)';
-      break;
-    case 'soft-film':
-      video.style.filter = 'contrast(0.95) brightness(1.1) saturate(0.9) sepia(0.2) blur(0.3px)';
-      break;
-    case 'bnw':
-      video.style.filter = 'grayscale(1) brightness(1.08) contrast(0.85) sepia(0.08) blur(0.3px)';
-      break;
-    case 'grunge':
-      video.style.filter = 'contrast(1.6) brightness(0.8) saturate(0.7)';
-      break;
-    case 'low-exposure':
-      video.style.filter = 'brightness(0.75) contrast(1.25) saturate(0.75) hue-rotate(-5deg)';
-      break;
-    case 'none':
-    default:
-      break;
+  function updateEffectsButton() {
+    if (currentEffect !== 'none') {
+      effectsModalBtn.classList.add('active-effect');
+    } else {
+      effectsModalBtn.classList.remove('active-effect');
+    }
   }
-}
 
-function getCurrentEffectFilter() {
-  switch (currentEffect) {
-    case 'sunlight':
-      return 'contrast(1.1) brightness(1.05) saturate(1.2) hue-rotate(-5deg)';
-    case 'cool':
-      return 'contrast(1.2) brightness(0.95) saturate(0.95) hue-rotate(15deg)';
-    case 'vintage':
-      return 'contrast(0.9) brightness(1.05) saturate(0.8) sepia(0.4) hue-rotate(-10deg)';
-    case 'color-film':
-      return 'contrast(1.1) brightness(1.05) saturate(1.3) hue-rotate(5deg)';
-    case 'soft-film':
-      return 'contrast(0.95) brightness(1.1) saturate(0.9) sepia(0.2) blur(0.3px)';
-    case 'bnw':
-      return 'grayscale(1) brightness(1.08) contrast(0.85) sepia(0.08) blur(0.3px)';
-    case 'grunge':
-      return 'contrast(1.6) brightness(0.8) saturate(0.7)';
-    case 'low-exposure':
-      return 'brightness(0.75) contrast(1.25) saturate(0.75) hue-rotate(-5deg)';
-    case 'none':
-    default:
-      return 'none';
+  function applyEffectToVideoPreview() {
+    // Reset filter
+    video.style.filter = 'none';
+    video.style.mixBlendMode = 'normal';
+
+    switch (currentEffect) {
+      case 'sunlight':
+        video.style.filter = 'contrast(1.1) brightness(1.05) saturate(1.2) hue-rotate(-5deg)';
+        break;
+      case 'cool':
+        video.style.filter = 'contrast(1.2) brightness(0.95) saturate(0.95) hue-rotate(15deg)';
+        break;
+      case 'vintage':
+        video.style.filter = 'contrast(0.9) brightness(1.05) saturate(0.8) sepia(0.4) hue-rotate(-10deg)';
+        break;
+      case 'color-film':
+        video.style.filter = 'contrast(1.1) brightness(1.05) saturate(1.3) hue-rotate(5deg)';
+        break;
+      case 'soft-film':
+        video.style.filter = 'contrast(0.95) brightness(1.1) saturate(0.9) sepia(0.2) blur(0.3px)';
+        break;
+      case 'bnw':
+        video.style.filter = 'grayscale(1) brightness(1.08) contrast(0.85) sepia(0.08) blur(0.3px)';
+        break;
+      case 'grunge':
+        video.style.filter = 'contrast(1.6) brightness(0.8) saturate(0.7)';
+        break;
+      case 'low-exposure':
+        video.style.filter = 'brightness(0.75) contrast(1.25) saturate(0.75) hue-rotate(-5deg)';
+        break;
+      case 'none':
+      default:
+        break;
+    }
+
+    updateEffectsButton();
   }
-}
+
+  function getCurrentEffectFilter() {
+    switch (currentEffect) {
+      case 'sunlight':
+        return 'contrast(1.1) brightness(1.05) saturate(1.2) hue-rotate(-5deg)';
+      case 'cool':
+        return 'contrast(1.2) brightness(0.95) saturate(0.95) hue-rotate(15deg)';
+      case 'vintage':
+        return 'contrast(0.9) brightness(1.05) saturate(0.8) sepia(0.4) hue-rotate(-10deg)';
+      case 'color-film':
+        return 'contrast(1.1) brightness(1.05) saturate(1.3) hue-rotate(5deg)';
+      case 'soft-film':
+        return 'contrast(0.95) brightness(1.1) saturate(0.9) sepia(0.2) blur(0.3px)';
+      case 'bnw':
+        return 'grayscale(1) brightness(1.08) contrast(0.85) sepia(0.08) blur(0.3px)';
+      case 'grunge':
+        return 'contrast(1.6) brightness(0.8) saturate(0.7)';
+      case 'low-exposure':
+        return 'brightness(0.75) contrast(1.25) saturate(0.75) hue-rotate(-5deg)';
+      case 'none':
+      default:
+        return 'none';
+    }
+  }
 
   function getPolaroidFilename() {
     const now = new Date();
@@ -258,9 +266,9 @@ function getCurrentEffectFilter() {
     ctx.filter = getCurrentEffectFilter();
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    ctx.globalCompositeOperation = 'source-over'; // Reset blending mode for the next steps
+    ctx.globalCompositeOperation = 'source-over'; // Reset blending mode for the next steps
 
-    modalImage.src = canvas.toDataURL("image/png");
+    modalImage.src = canvas.toDataURL("image/png");
     photoModal.classList.add("show");
     photoModal.classList.remove("hidden");
 
@@ -458,12 +466,13 @@ shareBtn?.addEventListener("click", () => {
     window.resetTimer();
     previewFrame.style.borderColor = defaultBorderColor;
     updateLogoColor(defaultBorderColor);
-    
-    // Reset effects to default
+  }
+
+  function resetEffects() {
     currentEffect = 'none';
     applyEffectToVideoPreview();
     
-    // Reset effect options
+    // Reset effect options UI
     effectOptions.forEach(option => {
       option.classList.remove('active');
       if (option.dataset.effect === 'none') {
@@ -482,6 +491,7 @@ shareBtn?.addEventListener("click", () => {
     photoModal.classList.remove("show");
     photoModal.classList.add("hidden");
     resetModal();
+    resetEffects(); 
   });
 
   photoModal?.addEventListener("click", (e) => {

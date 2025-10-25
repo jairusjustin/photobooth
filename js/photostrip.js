@@ -39,7 +39,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const logoImg = document.querySelector(".photostrip-caption .logo");
   const defaultBorderColor = getComputedStyle(previewFrame).borderColor;
 
+  // Effects elements 
+  const effectsModalBtn = document.getElementById("effects-modal-btn");
+  const effectsOverlay = document.getElementById("effects-overlay");
+  const effectOptions = document.querySelectorAll(".effect-option");
+
   let dotsToRetryTimeout;
+  let currentEffect = 'none'; 
 
   let currentRetakeSlot = null;
   let pendingRetakeSlot = null;
@@ -98,6 +104,76 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 5000);
   }
 
+  function updateEffectsButton() {
+    if (currentEffect !== 'none') {
+      effectsModalBtn.classList.add('active-effect');
+    } else {
+      effectsModalBtn.classList.remove('active-effect');
+    }
+  }
+
+  function applyEffectToVideoPreview() {
+    // Reset filter
+    video.style.filter = 'none';
+    video.style.mixBlendMode = 'normal';
+
+    switch (currentEffect) {
+      case 'sunlight':
+        video.style.filter = 'contrast(1.1) brightness(1.05) saturate(1.2) hue-rotate(-5deg)';
+        break;
+      case 'cool':
+        video.style.filter = 'contrast(1.2) brightness(0.95) saturate(0.95) hue-rotate(15deg)';
+        break;
+      case 'vintage':
+        video.style.filter = 'contrast(0.9) brightness(1.05) saturate(0.8) sepia(0.4) hue-rotate(-10deg)';
+        break;
+      case 'color-film':
+        video.style.filter = 'contrast(1.1) brightness(1.05) saturate(1.3) hue-rotate(5deg)';
+        break;
+      case 'soft-film':
+        video.style.filter = 'contrast(0.95) brightness(1.1) saturate(0.9) sepia(0.2) blur(0.3px)';
+        break;
+      case 'bnw':
+        video.style.filter = 'grayscale(1) brightness(1.08) contrast(0.85) sepia(0.08) blur(0.3px)';
+        break;
+      case 'grunge':
+        video.style.filter = 'contrast(1.6) brightness(0.8) saturate(0.7)';
+        break;
+      case 'low-exposure':
+        video.style.filter = 'brightness(0.75) contrast(1.25) saturate(0.75) hue-rotate(-5deg)';
+        break;
+      case 'none':
+      default:
+        break;
+    }
+
+    updateEffectsButton();
+  }
+
+  function getCurrentEffectFilter() {
+    switch (currentEffect) {
+      case 'sunlight':
+        return 'contrast(1.1) brightness(1.05) saturate(1.2) hue-rotate(-5deg)';
+      case 'cool':
+        return 'contrast(1.2) brightness(0.95) saturate(0.95) hue-rotate(15deg)';
+      case 'vintage':
+        return 'contrast(0.9) brightness(1.05) saturate(0.8) sepia(0.4) hue-rotate(-10deg)';
+      case 'color-film':
+        return 'contrast(1.1) brightness(1.05) saturate(1.3) hue-rotate(5deg)';
+      case 'soft-film':
+        return 'contrast(0.95) brightness(1.1) saturate(0.9) sepia(0.2) blur(0.3px)';
+      case 'bnw':
+        return 'grayscale(1) brightness(1.08) contrast(0.85) sepia(0.08) blur(0.3px)';
+      case 'grunge':
+        return 'contrast(1.6) brightness(0.8) saturate(0.7)';
+      case 'low-exposure':
+        return 'brightness(0.75) contrast(1.25) saturate(0.75) hue-rotate(-5deg)';
+      case 'none':
+      default:
+        return 'none';
+    }
+  }
+  
   function updatePhotoIndicator() {
     photoDots.forEach((dot, index) => {
       dot.classList.toggle('active', index === currentSlot);
@@ -250,6 +326,37 @@ function retakePhoto(slotNumber) {
   /* ---------------------- */
   /* EVENT LISTENERS */
   /* ---------------------- */
+  // ADDED: Effects overlay functionality
+  effectsModalBtn?.addEventListener("click", () => {
+    effectsOverlay.classList.toggle("show");
+  });
+
+  // ADDED: Close effects overlay when clicking outside
+  effectsOverlay?.addEventListener("click", (e) => {
+    if (e.target === effectsOverlay) {
+      effectsOverlay.classList.remove("show");
+    }
+  });
+
+  // ADDED: Update effect selection
+  effectOptions.forEach(option => {
+    option.addEventListener("click", function() {
+      // Remove active class from all options
+      effectOptions.forEach(opt => opt.classList.remove("active"));
+      // Add active class to clicked option
+      this.classList.add("active");
+      
+      // Set current effect
+      currentEffect = this.dataset.effect;
+      
+      // Apply effect to video preview
+      applyEffectToVideoPreview();
+      
+      // Close overlay after selection
+      effectsOverlay.classList.remove("show");
+    });
+  });
+
   retryBtn?.addEventListener("click", initCamera);
   overlayCloseBtn?.addEventListener("click", () => {
     permissionOverlay.classList.add("hidden");
@@ -279,6 +386,9 @@ startBtn.addEventListener("click", async () => {
 
   ctx.translate(canvas.width, 0);
   ctx.scale(-1, 1);
+  
+  // ADDED: Apply effect filter to capture
+  ctx.filter = getCurrentEffectFilter();
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
   const imgData = canvas.toDataURL("image/png");
@@ -581,6 +691,20 @@ startBtn.addEventListener("click", async () => {
   /* ---------------------- */
   /* MODAL CONTROLS */
   /* ---------------------- */
+  // ADDED: Reset effects function
+  function resetEffects() {
+    currentEffect = 'none';
+    applyEffectToVideoPreview();
+    
+    // Reset effect options UI
+    effectOptions.forEach(option => {
+      option.classList.remove('active');
+      if (option.dataset.effect === 'none') {
+        option.classList.add('active');
+      }
+    });
+  }
+
   function resetModal() {
     slots.forEach(slot => slot.innerHTML = "");
     modalSlots.forEach(slot => slot.innerHTML = "");
@@ -628,6 +752,7 @@ startBtn.addEventListener("click", async () => {
     photoModal.classList.remove("show");
     photoModal.classList.add("hidden");
     resetModal();
+    resetEffects(); 
   });
 
   photoModal?.addEventListener("click", (e) => {
@@ -663,7 +788,5 @@ startBtn.addEventListener("click", async () => {
     }
   });
 
-  // Automatically request camera on page load
   initCamera();
 });
-
