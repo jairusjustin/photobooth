@@ -710,7 +710,6 @@ startBtn.addEventListener("click", async () => {
     modalSlots.forEach(slot => slot.innerHTML = "");
     currentSlot = 0;
 
-    window.resetTimer?.();
     updatePhotoIndicator();
     hideAllRetakeButtons();
 
@@ -752,7 +751,8 @@ startBtn.addEventListener("click", async () => {
     photoModal.classList.remove("show");
     photoModal.classList.add("hidden");
     resetModal();
-    resetEffects(); 
+    resetEffects();
+    window.resetTimer?.();
   });
 
   photoModal?.addEventListener("click", (e) => {

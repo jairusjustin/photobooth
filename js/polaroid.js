@@ -463,7 +463,6 @@ shareBtn?.addEventListener("click", () => {
   /* ---------------------- */
   function resetModal() {
     modalImage.src = "";
-    window.resetTimer();
     previewFrame.style.borderColor = defaultBorderColor;
     updateLogoColor(defaultBorderColor);
   }
@@ -492,6 +491,7 @@ shareBtn?.addEventListener("click", () => {
     photoModal.classList.add("hidden");
     resetModal();
     resetEffects(); 
+    window.resetTimer();
   });
 
   photoModal?.addEventListener("click", (e) => {
